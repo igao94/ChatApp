@@ -1,4 +1,5 @@
 ﻿using Infrastructure.Database;
+using Infrastructure.Database.Seed;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -23,6 +24,8 @@ public static class DependencyInjection
                 opt.UseSqlServer(config.GetConnectionString("SqlServer"));
             }
         });
+
+        services.AddScoped<ISeedDatabase, SeedDatabase>();
 
         return services;
     }
