@@ -1,0 +1,46 @@
+[
+  {
+    "Id": "f03a5d70-4f28-4c69-9a0d-3cb2b7051b91",
+    "Name": "Michael Smith",
+    "Email": "michael@example.com",
+    "PasswordSalt": "h7s0c1DmXa5CqR1X5VkPKg==",
+    "PasswordHash": "zzDJmDa31uwamHqyEv3fVdw5NLoLfM4EgxcH0r1EFl6bhdDXR70vDq/HMOYm+AWcKtaQmnMHj9fToAzHhEc53w==",
+    "About": "Loves chatting and connecting with people."
+  },
+
+  {
+    "Id": "e3a6b91e-4a18-45e7-b530-91b7f39a789b",
+    "Name": "Jessica Johnson",
+    "Email": "jessica@example.com",
+    "PasswordSalt": "K34W2hV9aJajH2B6S8GTdg==",
+    "PasswordHash": "De+8zxHgBkyCJQSBcx0R1xYIH9BWXqCyXjVKqx9VRLDzJm4xXIMxmUV4vHYl9F9yQPRzq5RarHhnW+GusNLRJA==",
+    "About": "Enjoys real-time conversations and emojis."
+  },
+
+  {
+    "Id": "a25f857a-15f3-4c3d-a0e4-6b58e741e85e",
+    "Name": "Ivan Williams",
+    "Email": "ivan@example.com",
+    "PasswordSalt": "Lpu+qcPJmLhMt0YuFz01Hg==",
+    "PasswordHash": "F1Eg2zQpTEOE6tFWhpR7QboB7x8X6cM8LUVjvpVvgJjxYDa+uTt4PQ0Slz61InIpqa1DN4+VsfAhtg6nvZ3gcQ==",
+    "About": "Passionate about building smooth chat experiences."
+  },
+
+  {
+    "Id": "d6e7a57c-5e2f-4f3e-8bc8-2f71f9b7b92f",
+    "Name": "Anna Davis",
+    "Email": "anna@example.com",
+    "PasswordSalt": "jyoN87SXgqPEnqWBrXqQTg==",
+    "PasswordHash": "ML32JtDZcFZKwRTGki7qVBNHHQl5qJ6PjyFYJO9Oj1H3plZBikvmOHSz1K1Y9Qq/47kTW0Rd5Q5sNhN2Aj+fIg==",
+    "About": "Enjoys group chats and making new friends."
+  },
+
+  {
+    "Id": "b914f4a3-4f35-41a1-b95a-95f37c8e7f1d",
+    "Name": "Peter Thompson",
+    "Email": "peter@example.com",
+    "PasswordSalt": "T1NRG4DXkBMaX+mcR3Q8Rw==",
+    "PasswordHash": "iZ29SZefGULgEYcxRokyG0bZ1qkT3OpRXkQZJuJKzfYMK5xOcoMRPq1uQrMtyJXljSRL3NLhDxZKiySHtrCTBw==",
+    "About": "Helps users connect through meaningful chats."
+  }
+]
