@@ -27,4 +27,5 @@ public sealed class AppUser : BaseEntity
     public byte[] PasswordHash { get; set; } = null!;
     public byte[] PasswordSalt { get; set; } = null!;
     public string? About { get; set; }
+    public ICollection<AppUserRole> Roles { get; set; } = [];
 }
