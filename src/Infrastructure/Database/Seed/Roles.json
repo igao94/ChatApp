@@ -1,0 +1,13 @@
+[
+  {
+    "Id": "6b3ff1d9-7af1-4f0c-95d1-8a5d8ff8c6b9",
+    "Name": "User",
+    "NormalizedName": "USER"
+  },
+
+  {
+    "Id": "cba87948-2a6f-4f5c-a316-bcc8f74d5d3a",
+    "Name": "Admin",
+    "NormalizedName": "ADMIN"
+  }
+]
