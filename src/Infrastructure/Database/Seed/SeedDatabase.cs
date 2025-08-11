@@ -7,6 +7,15 @@ internal sealed class SeedDatabase(AppDbContext context) : ISeedDatabase
 {
     public async Task SeedDatabaseAsync()
     {
+        if (!context.AppRoles.Any())
+        {
+            var roles = GetRoles();
+
+            context.AppRoles.AddRange(roles);
+
+            await context.SaveChangesAsync();
+        }
+
         if (!context.Users.Any())
         {
             var users = GetUsers();
@@ -19,9 +28,9 @@ internal sealed class SeedDatabase(AppDbContext context) : ISeedDatabase
 
     private static List<AppUser> GetUsers()
     {
-        var jsonData = File.ReadAllText("../Infrastructure/Database/Seed/Users.json");
+        var usersData = File.ReadAllText("../Infrastructure/Database/Seed/Users.json");
 
-        var userSeedDto = JsonSerializer.Deserialize<List<UserSeedDto>>(jsonData);
+        var userSeedDto = JsonSerializer.Deserialize<List<UserSeedDto>>(usersData);
 
         List<AppUser> users = [];
 
@@ -41,5 +50,14 @@ internal sealed class SeedDatabase(AppDbContext context) : ISeedDatabase
         }
 
         return users;
+    }
+
+    private static List<AppRole> GetRoles()
+    {
+        var rolesData = File.ReadAllText("../Infrastructure/Database/Seed/Roles.json");
+
+        var roles = JsonSerializer.Deserialize<List<AppRole>>(rolesData);
+
+        return roles!;
     }
 }
