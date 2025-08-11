@@ -1,19 +1,31 @@
+using API.Extensions;
 using Infrastructure.Database;
 using Infrastructure.Database.Seed;
 using Infrastructure.Extensions;
 using Microsoft.EntityFrameworkCore;
+using Serilog;
+using Serilog.Events;
 
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
+builder.Host.UseSerilog((context, config) =>
+{
+    config
+        .MinimumLevel.Override("Microsoft", LogEventLevel.Warning)
+        .MinimumLevel.Override("Microsoft.EntityFrameworkCore", LogEventLevel.Information)
+        .WriteTo.Console();
+});
+
+builder.Services.AddApiServices();
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
-
-builder.Services.AddControllers();
 
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseSerilogRequestLogging();
+
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
@@ -50,6 +62,6 @@ static async Task SeedDatabaseAsync(WebApplication app)
     {
         var logger = services.GetRequiredService<ILogger<Program>>();
 
-        logger.LogError(ex, "An error occurred");
+        logger.LogError(ex, "An error occurred.");
     }
 }
