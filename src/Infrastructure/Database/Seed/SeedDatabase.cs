@@ -1,37 +1,92 @@
 ﻿using Domain.Entites;
+using Microsoft.Extensions.Logging;
 using System.Text.Json;
 
 namespace Infrastructure.Database.Seed;
 
-internal sealed class SeedDatabase(AppDbContext context) : ISeedDatabase
+internal sealed class SeedDatabase(AppDbContext context, ILogger<SeedDatabase> logger) : ISeedDatabase
 {
     public async Task SeedDatabaseAsync()
     {
-        if (!context.AppRoles.Any())
+        logger.LogInformation("Starting database seeding...");
+
+        int totalSeeded = 0;
+
+        try
         {
-            var roles = GetRoles();
+            if (!context.AppRoles.Any())
+            {
+                logger.LogInformation("Seeding roles...");
 
-            context.AppRoles.AddRange(roles);
+                var roles = GetRoles();
 
-            await context.SaveChangesAsync();
+                context.AppRoles.AddRange(roles);
+
+                await context.SaveChangesAsync();
+
+                totalSeeded += roles.Count;
+
+                logger.LogInformation("Seeded {count} roles.", roles.Count);
+            }
+            else
+            {
+                logger.LogInformation("Roles already exist, skipping seeding roles.");
+            }
+
+            if (!context.Users.Any())
+            {
+                logger.LogInformation("Seeding users...");
+
+                var users = GetUsers();
+
+                context.Users.AddRange(users);
+
+                await context.SaveChangesAsync();
+
+                totalSeeded += users.Count;
+
+                logger.LogInformation("Seeded {count} users.", users.Count);
+            }
+            else
+            {
+                logger.LogInformation("Users already exist, skipping seeding users.");
+            }
+
+            if (!context.AppUserRoles.Any())
+            {
+                logger.LogInformation("Seeding user roles...");
+
+                var userRoles = GetUserRoles();
+
+                context.AppUserRoles.AddRange(userRoles);
+
+                await context.SaveChangesAsync();
+
+                totalSeeded += userRoles.Count;
+
+                logger.LogInformation("Seeded {count} user roles.", userRoles.Count);
+            }
+            else
+            {
+                logger.LogInformation("UserRoles already exist, skipping seeding user roles.");
+            }
+        }
+        catch (Exception ex)
+        {
+            logger.LogError(ex, "An error occurred during database seeding.");
+
+            throw;
         }
 
-        if (!context.Users.Any())
+        if (totalSeeded > 0)
         {
-            var users = GetUsers();
-
-            context.Users.AddRange(users);
-
-            await context.SaveChangesAsync();
+            logger.LogInformation("Database seeding completed successfully. " +
+                "Total records seeded: {totalSeeded}.", totalSeeded);
         }
-
-        if (!context.AppUserRoles.Any())
+        else
         {
-            var userRoles = GetUserRoles();
-
-            context.AppUserRoles.AddRange(userRoles);
-
-            await context.SaveChangesAsync();
+            logger.LogInformation("Database seeding completed. " +
+                "No new records were added, all data already exists.");
         }
     }
 

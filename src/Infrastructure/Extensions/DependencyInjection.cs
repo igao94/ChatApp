@@ -17,11 +17,11 @@ public static class DependencyInjection
 
             if (useInMemoryDatabase)
             {
-                opt.UseInMemoryDatabase("InMemoryDatabase");
+                opt.UseInMemoryDatabase("InMemoryDatabase").EnableSensitiveDataLogging();
             }
             else
             {
-                opt.UseSqlServer(config.GetConnectionString("SqlServer"));
+                opt.UseSqlServer(config.GetConnectionString("SqlServer")).EnableSensitiveDataLogging();
             }
         });
 
