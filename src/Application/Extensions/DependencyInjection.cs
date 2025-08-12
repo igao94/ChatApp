@@ -1,5 +1,5 @@
 ﻿using Application.Accounts.Commands;
-using Microsoft.Extensions.Configuration;
+using Application.Mappings;
 using Microsoft.Extensions.DependencyInjection;
 
 namespace Application.Extensions;
@@ -12,6 +12,8 @@ public static class DependencyInjection
         {
             cfg.RegisterServicesFromAssemblies(typeof(LoginCommand).Assembly);
         });
+
+        services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
         return services;
     }
