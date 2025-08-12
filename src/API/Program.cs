@@ -1,4 +1,5 @@
 using API.Extensions;
+using Application.Extensions;
 using Infrastructure.Database;
 using Infrastructure.Database.Seed;
 using Infrastructure.Extensions;
@@ -18,6 +19,8 @@ builder.Host.UseSerilog((context, config) =>
 });
 
 builder.Services.AddApiServices();
+
+builder.Services.AddApplicationService();
 
 builder.Services.AddInfrastructureServices(builder.Configuration);
 
