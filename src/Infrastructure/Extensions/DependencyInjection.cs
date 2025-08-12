@@ -1,4 +1,6 @@
-﻿using Application.Abstractions.Repositories;
+﻿using Application.Abstractions.Authentication;
+using Application.Abstractions.Repositories;
+using Infrastructure.Authentication;
 using Infrastructure.Database;
 using Infrastructure.Database.Seed;
 using Infrastructure.Repositories;
@@ -34,6 +36,8 @@ public static class DependencyInjection
         services.AddScoped<IUserRepository, UserRepository>();
 
         services.AddScoped<IUnitOfWork, UnitOfWork>();
+
+        services.AddScoped<ITokenService, TokenService>();
 
         return services;
     }
