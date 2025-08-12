@@ -4,5 +4,5 @@ namespace Application.Abstractions.Authentication;
 
 public interface ITokenService
 {
-    string GetToken(AppUser user);
+    string GetToken(AppUser user, IEnumerable<string> roles);
 }

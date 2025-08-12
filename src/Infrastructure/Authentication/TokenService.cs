@@ -10,11 +10,13 @@ namespace Infrastructure.Authentication;
 
 internal sealed class TokenService(IConfiguration config) : ITokenService
 {
-    public string GetToken(AppUser user)
+    public string GetToken(AppUser user, IEnumerable<string> roles)
     {
         var creds = GetCredentials();
 
         var claims = GetClaims(user);
+
+        claims.AddRange(roles.Select(role => new Claim(ClaimTypes.Role, role)));
 
         var tokenDescriptor = new SecurityTokenDescriptor
         {

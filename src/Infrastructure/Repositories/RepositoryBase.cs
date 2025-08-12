@@ -8,18 +8,20 @@ namespace Infrastructure.Repositories;
 
 internal class RepositoryBase<T>(AppDbContext context) : IRepositoryBase<T> where T : BaseEntity
 {
-    private readonly DbSet<T> _context = context.Set<T>();
+    protected readonly AppDbContext _context = context;
 
-    public void Add(T entity) => _context.Add(entity);
+    private readonly DbSet<T> _dbSet = context.Set<T>();
 
-    public void Delete(T entity) => _context.Remove(entity);
+    public void Add(T entity) => _dbSet.Add(entity);
 
-    public async Task<IEnumerable<T>> GetAllAsync() => await _context.ToListAsync();
+    public void Delete(T entity) => _dbSet.Remove(entity);
+
+    public async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
 
     public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate)
     {
-        return await _context.Where(predicate).FirstOrDefaultAsync();
+        return await _dbSet.Where(predicate).FirstOrDefaultAsync();
     }
 
-    public async Task<T?> GetByIdAsync(Guid id) => await _context.FindAsync(id);
+    public async Task<T?> GetByIdAsync(Guid id) => await _dbSet.FindAsync(id);
 }

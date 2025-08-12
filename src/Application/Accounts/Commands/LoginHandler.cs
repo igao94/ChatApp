@@ -17,7 +17,9 @@ internal sealed class LoginHandler(IUnitOfWork unitOfWork,
             return Result<string>.Failure("User not found.");
         }
 
-        var token = tokenService.GetToken(user);
+        var roles = await unitOfWork.UserRepository.GetUserRolesAsync(user.Id);
+
+        var token = tokenService.GetToken(user, roles);
 
         return Result<string>.Success(token);
     }
