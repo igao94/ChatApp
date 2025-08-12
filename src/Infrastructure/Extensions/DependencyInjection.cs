@@ -4,9 +4,12 @@ using Infrastructure.Authentication;
 using Infrastructure.Database;
 using Infrastructure.Database.Seed;
 using Infrastructure.Repositories;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace Infrastructure.Extensions;
 
@@ -38,6 +41,22 @@ public static class DependencyInjection
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenService, TokenService>();
+
+        services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+            .AddJwtBearer(opt =>
+            {
+                var key = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(config["Jwt:TokenKey"]!));
+
+                opt.TokenValidationParameters = new TokenValidationParameters
+                {
+                    ValidateIssuer = true,
+                    ValidIssuer = config["Jwt:Issuer"],
+                    ValidateAudience = true,
+                    ValidAudience = config["Jwt:Audience"],
+                    ValidateIssuerSigningKey = true,
+                    IssuerSigningKey = key
+                };
+            });
 
         return services;
     }
