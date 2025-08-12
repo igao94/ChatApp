@@ -1,5 +1,7 @@
-﻿using Infrastructure.Database;
+﻿using Application.Abstractions.Repositories;
+using Infrastructure.Database;
 using Infrastructure.Database.Seed;
+using Infrastructure.Repositories;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,6 +28,12 @@ public static class DependencyInjection
         });
 
         services.AddScoped<ISeedDatabase, SeedDatabase>();
+
+        services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
+
+        services.AddScoped<IUserRepository, UserRepository>();
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         return services;
     }
