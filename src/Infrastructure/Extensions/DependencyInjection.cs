@@ -31,6 +31,10 @@ public static class DependencyInjection
 
         services.AddScoped(typeof(IRepositoryBase<>), typeof(RepositoryBase<>));
 
+        services.AddScoped<IUserRepository, UserRepository>();
+
+        services.AddScoped<IUnitOfWork, UnitOfWork>();
+
         return services;
     }
 }

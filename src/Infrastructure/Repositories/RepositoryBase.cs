@@ -6,7 +6,7 @@ using System.Linq.Expressions;
 
 namespace Infrastructure.Repositories;
 
-internal sealed class RepositoryBase<T>(AppDbContext context) : IRepositoryBase<T> where T : BaseEntity
+internal class RepositoryBase<T>(AppDbContext context) : IRepositoryBase<T> where T : BaseEntity
 {
     private readonly DbSet<T> _context = context.Set<T>();
 
