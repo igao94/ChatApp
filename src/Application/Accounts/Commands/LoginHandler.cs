@@ -6,6 +6,7 @@ using Shared;
 namespace Application.Accounts.Commands;
 
 internal sealed class LoginHandler(IUnitOfWork unitOfWork,
+    IPasswordHasher passwordHasher,
     ITokenService tokenService) : IRequestHandler<LoginCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
@@ -15,6 +16,13 @@ internal sealed class LoginHandler(IUnitOfWork unitOfWork,
         if (user is null)
         {
             return Result<string>.Failure("User not found.");
+        }
+
+        var verified = passwordHasher.Verify(request.Password, user.PasswordHash);
+
+        if (!verified)
+        {
+            return Result<string>.Failure("Invalid email or password.");
         }
 
         var roles = await unitOfWork.UserRepository.GetUserRolesAsync(user.Id);
