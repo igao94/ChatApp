@@ -1,4 +1,4 @@
-﻿using Application.Accounts.Commands;
+﻿using Application.Accounts.Commands.Login;
 using Application.Mappings;
 using Microsoft.Extensions.DependencyInjection;
 

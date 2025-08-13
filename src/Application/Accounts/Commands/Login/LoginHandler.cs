@@ -3,7 +3,7 @@ using Application.Abstractions.Repositories;
 using MediatR;
 using Shared;
 
-namespace Application.Accounts.Commands;
+namespace Application.Accounts.Commands.Login;
 
 internal sealed class LoginHandler(IUnitOfWork unitOfWork,
     IPasswordHasher passwordHasher,

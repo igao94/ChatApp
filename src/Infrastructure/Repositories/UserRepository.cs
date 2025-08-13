@@ -15,4 +15,13 @@ internal sealed class UserRepository(AppDbContext context)
             .Select(u => u.Role.Name)
             .ToListAsync();
     }
+
+    public void AddUserToRole(Guid userId, Guid roleId)
+    {
+        _context.AppUserRoles.Add(new AppUserRole
+        {
+            UserId = userId,
+            RoleId = roleId
+        });
+    }
 }

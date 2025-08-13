@@ -14,6 +14,11 @@ internal class RepositoryBase<T>(AppDbContext context) : IRepositoryBase<T> wher
 
     public void Add(T entity) => _dbSet.Add(entity);
 
+    public async Task<bool> AnyAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.AnyAsync(predicate);
+    }
+
     public void Delete(T entity) => _dbSet.Remove(entity);
 
     public async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
