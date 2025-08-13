@@ -1,10 +1,12 @@
-﻿using Application.Abstractions.Repositories;
+﻿using Application.Abstractions.Authentication;
+using Application.Abstractions.Repositories;
 using MediatR;
 using Shared;
 
 namespace Application.Accounts.Commands;
 
-internal sealed class LoginHandler(IUnitOfWork unitOfWork) : IRequestHandler<LoginCommand, Result<string>>
+internal sealed class LoginHandler(IUnitOfWork unitOfWork,
+    ITokenService tokenService) : IRequestHandler<LoginCommand, Result<string>>
 {
     public async Task<Result<string>> Handle(LoginCommand request, CancellationToken cancellationToken)
     {
@@ -15,6 +17,10 @@ internal sealed class LoginHandler(IUnitOfWork unitOfWork) : IRequestHandler<Log
             return Result<string>.Failure("User not found.");
         }
 
-        return Result<string>.Success("ok");
+        var roles = await unitOfWork.UserRepository.GetUserRolesAsync(user.Id);
+
+        var token = tokenService.GetToken(user, roles);
+
+        return Result<string>.Success(token);
     }
 }
