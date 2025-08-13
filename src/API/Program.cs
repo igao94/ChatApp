@@ -1,4 +1,5 @@
 using API.Extensions;
+using API.Middleware;
 using Application.Extensions;
 using Infrastructure.Database;
 using Infrastructure.Database.Seed;
@@ -27,6 +28,8 @@ builder.Services.AddInfrastructureServices(builder.Configuration);
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
+app.UseMiddleware<ExceptionMiddleware>();
+
 app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
