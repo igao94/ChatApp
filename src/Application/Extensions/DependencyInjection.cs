@@ -1,4 +1,5 @@
 ﻿using Application.Accounts.Commands.Login;
+using Application.Behaviors;
 using Application.Mappings;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -11,6 +12,8 @@ public static class DependencyInjection
         services.AddMediatR(cfg =>
         {
             cfg.RegisterServicesFromAssemblies(typeof(LoginCommand).Assembly);
+
+            cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
         });
 
         services.AddAutoMapper(typeof(MappingProfile).Assembly);
