@@ -11,21 +11,18 @@ public sealed class AppUser : BaseEntity
         DateTime createdAt,
         string name,
         string email,
-        byte[] passwordHash,
-        byte[] passwordSalt)
+        string passwordHash)
     {
         Id = id;
         CreatedAt = createdAt;
         Name = name;
         Email = email;
         PasswordHash = passwordHash;
-        PasswordSalt = passwordSalt;
     }
 
     public string Name { get; set; } = null!;
     public string Email { get; set; } = null!;
-    public byte[] PasswordHash { get; set; } = null!;
-    public byte[] PasswordSalt { get; set; } = null!;
+    public string PasswordHash { get; set; } = null!;
     public string? About { get; set; }
     public ICollection<AppUserRole> Roles { get; set; } = [];
 }

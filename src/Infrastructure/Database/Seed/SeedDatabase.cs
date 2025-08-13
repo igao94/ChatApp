@@ -94,18 +94,8 @@ internal sealed class SeedDatabase(AppDbContext context, ILogger<SeedDatabase> l
     {
         var usersData = File.ReadAllText("../Infrastructure/Database/Seed/Users.json");
 
-        var userSeedDto = JsonSerializer.Deserialize<List<UserSeedDto>>(usersData)
+        var users = JsonSerializer.Deserialize<List<AppUser>>(usersData)
             ?? throw new Exception("Failed to deserialize Users.json");
-
-        var users = userSeedDto.Select(dto => new AppUser
-        {
-            Id = dto.Id,
-            Name = dto.Name,
-            Email = dto.Email,
-            About = dto.About,
-            PasswordHash = Convert.FromBase64String(dto.PasswordHash),
-            PasswordSalt = Convert.FromBase64String(dto.PasswordSalt)
-        }).ToList();
 
         return users;
     }

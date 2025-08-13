@@ -42,6 +42,8 @@ public static class DependencyInjection
 
         services.AddScoped<ITokenService, TokenService>();
 
+        services.AddSingleton<IPasswordHasher, PasswordHasher>();
+
         services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
             .AddJwtBearer(opt =>
             {
