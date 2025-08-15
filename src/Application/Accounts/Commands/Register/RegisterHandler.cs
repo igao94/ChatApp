@@ -10,7 +10,7 @@ namespace Application.Accounts.Commands.Register;
 internal sealed class RegisterHandler(IUnitOfWork unitOfWork,
     IPasswordHasher passwordHasher) : IRequestHandler<RegisterCommand, Result<AccountDto>>
 {
-    public async Task<Result<AccountDto>> Handle(RegisterCommand request, 
+    public async Task<Result<AccountDto>> Handle(RegisterCommand request,
         CancellationToken cancellationToken)
     {
         if (await unitOfWork.UserRepository.AnyAsync(u => u.Email == request.Email))
@@ -32,7 +32,7 @@ internal sealed class RegisterHandler(IUnitOfWork unitOfWork,
 
         var role = await unitOfWork.RoleRepository.GetAsync(r => r.Name == "User");
 
-        unitOfWork.UserRepository.AddUserToRole(user.Id, role!.Id);
+        unitOfWork.UserRoleRepository.AddUserToRole(user.Id, role!.Id);
 
         var result = await unitOfWork.SaveChangesAsync();
 

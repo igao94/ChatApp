@@ -1,0 +1,30 @@
+﻿using Application.Users.Commands.DeleteUser;
+using Application.Users.Commands.UpdateUser;
+using Application.Users.DTOs;
+using Application.Users.Queries.GetUserById;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+
+namespace API.Controllers;
+
+[Authorize]
+public sealed class UsersController : BaseApiController
+{
+    [HttpGet("{id}")]
+    public async Task<ActionResult<UserDto>> GetUserById(Guid id)
+    {
+        return HandleResult(await Mediator.Send(new GetUserByIdQuery(id)));
+    }
+
+    [HttpPut]
+    public async Task<ActionResult> UpdateUser(UpdateUserCommand command)
+    {
+        return HandleResult(await Mediator.Send(command));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteUser(Guid id)
+    {
+        return HandleResult(await Mediator.Send(new DeleteUserCommand(id)));
+    }
+}
