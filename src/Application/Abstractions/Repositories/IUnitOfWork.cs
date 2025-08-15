@@ -2,7 +2,8 @@
 
 public interface IUnitOfWork
 {
-    public IUserRepository UserRepository { get; }
-    public IRoleRepository RoleRepository { get; }
+    IUserRepository UserRepository { get; }
+    IRoleRepository RoleRepository { get; }
+    IUserRoleRepository UserRoleRepository { get; }
     Task<bool> SaveChangesAsync();
 }

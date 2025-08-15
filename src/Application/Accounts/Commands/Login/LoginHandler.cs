@@ -25,7 +25,7 @@ internal sealed class LoginHandler(IUnitOfWork unitOfWork,
             return Result<string>.Failure("Invalid email or password.");
         }
 
-        var roles = await unitOfWork.UserRepository.GetUserRolesAsync(user.Id);
+        var roles = await unitOfWork.UserRoleRepository.GetUserRoleNamesAsync(user.Id);
 
         var token = tokenService.GetToken(user, roles);
 

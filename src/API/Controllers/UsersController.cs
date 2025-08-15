@@ -1,4 +1,5 @@
-﻿using Application.Users.Commands.UpdateUser;
+﻿using Application.Users.Commands.DeleteUser;
+using Application.Users.Commands.UpdateUser;
 using Application.Users.DTOs;
 using Application.Users.Queries.GetUserById;
 using Microsoft.AspNetCore.Authorization;
@@ -15,9 +16,15 @@ public sealed class UsersController : BaseApiController
         return HandleResult(await Mediator.Send(new GetUserByIdQuery(id)));
     }
 
-    [HttpPut("{id}")]
-    public async Task<ActionResult> UpdateUser(Guid id, string? about)
+    [HttpPut]
+    public async Task<ActionResult> UpdateUser(UpdateUserCommand command)
     {
-        return HandleResult(await Mediator.Send(new UpdateUserCommand(id, about)));
+        return HandleResult(await Mediator.Send(command));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteUser(Guid id)
+    {
+        return HandleResult(await Mediator.Send(new DeleteUserCommand(id)));
     }
 }
