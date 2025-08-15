@@ -4,12 +4,12 @@ using AutoMapper;
 using MediatR;
 using Shared;
 
-namespace Application.Users.Queries.GetById;
+namespace Application.Users.Queries.GetUserById;
 
-internal sealed class GetByIdHandler(IUnitOfWork unitOfWork,
-    IMapper mapper) : IRequestHandler<GetByIdQuery, Result<UserDto>>
+internal sealed class GetUserByIdHandler(IUnitOfWork unitOfWork,
+    IMapper mapper) : IRequestHandler<GetUserByIdQuery, Result<UserDto>>
 {
-    public async Task<Result<UserDto>> Handle(GetByIdQuery request, CancellationToken cancellationToken)
+    public async Task<Result<UserDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
         var user = await unitOfWork.UserRepository.GetByIdAsync(request.Id);
 
