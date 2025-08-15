@@ -15,7 +15,7 @@ internal sealed class LoginHandler(IUnitOfWork unitOfWork,
 
         if (user is null)
         {
-            return Result<string>.Failure("User not found.");
+            return Result<string>.Failure("Invalid email or password.");
         }
 
         var verified = passwordHasher.Verify(request.Password, user.PasswordHash);
