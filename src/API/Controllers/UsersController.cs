@@ -2,12 +2,10 @@
 using Application.Users.Commands.UpdateUser;
 using Application.Users.DTOs;
 using Application.Users.Queries.GetUserById;
-using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
-[Authorize]
 public sealed class UsersController : BaseApiController
 {
     [HttpGet("{id}")]
