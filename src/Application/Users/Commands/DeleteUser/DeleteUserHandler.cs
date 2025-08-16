@@ -1,15 +1,16 @@
-﻿using Application.Abstractions.Repositories;
+﻿using Application.Abstractions.Authentication;
+using Application.Abstractions.Repositories;
 using MediatR;
 using Shared;
 
 namespace Application.Users.Commands.DeleteUser;
 
-internal sealed class DeleteUserHandler(IUnitOfWork unitOfWork)
-    : IRequestHandler<DeleteUserCommand, Result<Unit>>
+internal sealed class DeleteUserHandler(IUnitOfWork unitOfWork,
+    IUserContext userContext): IRequestHandler<DeleteUserCommand, Result<Unit>>
 {
     public async Task<Result<Unit>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await unitOfWork.UserRepository.GetByIdAsync(request.Id);
+        var user = await unitOfWork.UserRepository.GetByIdAsync(userContext.UserId);
 
         if (user is null)
         {

@@ -22,9 +22,9 @@ public sealed class UsersController : BaseApiController
         return HandleResult(await Mediator.Send(command));
     }
 
-    [HttpDelete("{id}")]
-    public async Task<ActionResult> DeleteUser(Guid id)
+    [HttpDelete]
+    public async Task<ActionResult> DeleteUser()
     {
-        return HandleResult(await Mediator.Send(new DeleteUserCommand(id)));
+        return HandleResult(await Mediator.Send(new DeleteUserCommand()));
     }
 }
