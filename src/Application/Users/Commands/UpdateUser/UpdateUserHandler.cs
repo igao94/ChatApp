@@ -1,15 +1,16 @@
-﻿using Application.Abstractions.Repositories;
+﻿using Application.Abstractions.Authentication;
+using Application.Abstractions.Repositories;
 using MediatR;
 using Shared;
 
 namespace Application.Users.Commands.UpdateUser;
 
-internal sealed class UpdateUserHandler(IUnitOfWork unitOfWork)
-    : IRequestHandler<UpdateUserCommand, Result<Unit>>
+internal sealed class UpdateUserHandler(IUnitOfWork unitOfWork,
+    IUserContext userContext): IRequestHandler<UpdateUserCommand, Result<Unit>>
 {
     public async Task<Result<Unit>> Handle(UpdateUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await unitOfWork.UserRepository.GetByIdAsync(request.Id);
+        var user = await unitOfWork.UserRepository.GetByIdAsync(userContext.UserId);
 
         if (user is null)
         {
