@@ -16,6 +16,8 @@ public static class DependencyInjection
             cfg.RegisterServicesFromAssemblies(typeof(LoginCommand).Assembly);
 
             cfg.AddOpenBehavior(typeof(ValidationBehavior<,>));
+
+            cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
 
         services.AddAutoMapper(typeof(MappingProfile).Assembly);
