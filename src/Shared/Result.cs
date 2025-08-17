@@ -1,6 +1,6 @@
 ﻿namespace Shared;
 
-public sealed class Result<T>
+public sealed class Result<T> : IResult
 {
     private Result()
     {
