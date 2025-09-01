@@ -8,6 +8,7 @@ public sealed class AppDbContext(DbContextOptions<AppDbContext> options) : DbCon
     internal DbSet<AppUser> Users { get; set; }
     internal DbSet<AppRole> AppRoles { get; set; }
     internal DbSet<AppUserRole> AppUserRoles { get; set; }
+    internal DbSet<Message> Messages { get; set; }
 
     protected override void OnModelCreating(ModelBuilder builder)
     {

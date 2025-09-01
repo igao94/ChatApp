@@ -7,4 +7,6 @@ public sealed class AppUser : BaseEntity
     public string PasswordHash { get; set; } = null!;
     public string? About { get; set; }
     public ICollection<AppUserRole> Roles { get; set; } = [];
+    public ICollection<Message> MessagesSent { get; set; } = [];
+    public ICollection<Message> MessagesReceived { get; set; } = [];
 }
