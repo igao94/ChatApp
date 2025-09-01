@@ -4,8 +4,8 @@ using Infrastructure.Database;
 
 namespace Infrastructure.Repositories;
 
-internal sealed class UserRepository(AppDbContext context) 
-    : RepositoryBase<AppUser>(context), IUserRepository
+internal sealed class MessageRepository(AppDbContext context) 
+    : RepositoryBase<Message>(context), IMessageRepository
 {
 
 }

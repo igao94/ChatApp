@@ -42,6 +42,8 @@ public static class DependencyInjection
 
         services.AddScoped<IUserRoleRepository, UserRoleRepository>();
 
+        services.AddScoped<IMessageRepository, MessageRepository>();
+
         services.AddScoped<IUnitOfWork, UnitOfWork>();
 
         services.AddScoped<ITokenService, TokenService>();

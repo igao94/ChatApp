@@ -13,11 +13,11 @@ internal sealed class MessageEntityConfiguration : IEntityTypeConfiguration<Mess
         builder.HasOne(m => m.Sender)
             .WithMany(u => u.MessagesSent)
             .HasForeignKey(m => m.SenderId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
 
         builder.HasOne(m => m.Recipient)
             .WithMany(u => u.MessagesReceived)
             .HasForeignKey(m => m.RecipientId)
-            .OnDelete(DeleteBehavior.SetNull);
+            .OnDelete(DeleteBehavior.NoAction);
     }
 }
