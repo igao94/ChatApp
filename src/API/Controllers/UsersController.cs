@@ -12,7 +12,7 @@ public sealed class UsersController : BaseApiController
 {
     [Authorize(Policy = "RequireAdminRole")]
     [HttpGet]
-    public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
+    public async Task<ActionResult<IReadOnlyList<UserDto>>> GetAllUsers()
     {
         return HandleResult(await Mediator.Send(new GetAllUsersQuery()));
     }

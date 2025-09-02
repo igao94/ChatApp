@@ -4,4 +4,4 @@ using Shared;
 
 namespace Application.Users.Queries.GetAllUsers;
 
-public sealed record GetAllUsersQuery : IRequest<Result<IEnumerable<UserDto>>>;
+public sealed record GetAllUsersQuery : IRequest<Result<IReadOnlyList<UserDto>>>;

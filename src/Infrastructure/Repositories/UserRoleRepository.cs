@@ -8,7 +8,7 @@ namespace Infrastructure.Repositories;
 internal sealed class UserRoleRepository(AppDbContext context) 
     : RepositoryBase<AppUserRole>(context), IUserRoleRepository
 {
-    public async Task<IEnumerable<string>> GetUserRoleNamesAsync(Guid id)
+    public async Task<IReadOnlyList<string>> GetUserRoleNamesAsync(Guid id)
     {
         return await _context.AppUserRoles
             .Where(ur => ur.UserId == id)
