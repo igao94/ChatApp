@@ -18,10 +18,11 @@ internal sealed class GetMessagesHandler(IUnitOfWork unitOfWork,
 
         if (user is null)
         {
-            return Result<IReadOnlyList<MessageDto>>.Failure("User not logged in.");
+            return Result<IReadOnlyList<MessageDto>>.Failure("User not found.");
         }
 
-        var messages = await unitOfWork.MessageRepository.GetMessagesForUser(user.Id, request.Container);
+        var messages = await unitOfWork.MessageRepository
+            .GetMessagesForUserAsync(user.Id, request.Container);
 
         return Result<IReadOnlyList<MessageDto>>.Success(mapper.Map<IReadOnlyList<MessageDto>>(messages));
     }

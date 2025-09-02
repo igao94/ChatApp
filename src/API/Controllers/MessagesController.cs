@@ -1,5 +1,6 @@
 ﻿using Application.Messages.Commands.SendMessage;
 using Application.Messages.DTOs;
+using Application.Messages.Queries.GetChatBetweenUsers;
 using Application.Messages.Queries.GetMessages;
 using Microsoft.AspNetCore.Mvc;
 
@@ -17,5 +18,11 @@ public sealed class MessagesController : BaseApiController
     public async Task<ActionResult<IReadOnlyList<MessageDto>>> GetMessages(string container)
     {
         return HandleResult(await Mediator.Send(new GetMessagesQuery(container)));
+    }
+
+    [HttpGet("get-chat/{recipientId}")]
+    public async Task<ActionResult<IReadOnlyList<MessageDto>>> GetChat(Guid recipientId)
+    {
+        return HandleResult(await Mediator.Send(new GetChatBetweenUsersQuery(recipientId)));
     }
 }
