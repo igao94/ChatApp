@@ -1,13 +1,22 @@
 ﻿using Application.Users.Commands.DeleteUser;
 using Application.Users.Commands.UpdateUser;
 using Application.Users.DTOs;
+using Application.Users.Queries.GetAllUsers;
 using Application.Users.Queries.GetUserById;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 
 namespace API.Controllers;
 
 public sealed class UsersController : BaseApiController
 {
+    [Authorize(Policy = "RequireAdminRole")]
+    [HttpGet]
+    public async Task<ActionResult<IEnumerable<UserDto>>> GetAllUsers()
+    {
+        return HandleResult(await Mediator.Send(new GetAllUsersQuery()));
+    }
+
     [HttpGet("{id}")]
     public async Task<ActionResult<UserDto>> GetUserById(Guid id)
     {
