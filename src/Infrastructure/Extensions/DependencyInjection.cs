@@ -70,6 +70,9 @@ public static class DependencyInjection
                 };
             });
 
+        services.AddAuthorizationBuilder()
+            .AddPolicy("RequireAdminRole", opt => opt.RequireRole("Admin"));
+
         return services;
     }
 }

@@ -6,7 +6,7 @@ using Shared;
 namespace Application.Users.Commands.DeleteUser;
 
 internal sealed class DeleteUserHandler(IUnitOfWork unitOfWork,
-    IUserContext userContext): IRequestHandler<DeleteUserCommand, Result<Unit>>
+    IUserContext userContext) : IRequestHandler<DeleteUserCommand, Result<Unit>>
 {
     public async Task<Result<Unit>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
