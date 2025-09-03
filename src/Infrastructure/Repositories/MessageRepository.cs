@@ -61,4 +61,15 @@ internal sealed class MessageRepository(AppDbContext context)
 
         return await query.ToListAsync();
     }
+
+    public async Task NullifyUserIdsInMessagesAsync(Guid userId)
+    {
+        await _context.Messages
+            .Where(m => m.SenderId == userId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(m => m.SenderId, (Guid?)null));
+
+        await _context.Messages
+            .Where(m => m.RecipientId == userId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(m => m.RecipientId, (Guid?)null));
+    }
 }

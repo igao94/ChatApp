@@ -17,9 +17,9 @@ internal sealed class DeleteUserHandler(IUnitOfWork unitOfWork,
             return Result<Unit>.Failure("User not found.");
         }
 
-        var roles = await unitOfWork.UserRoleRepository.GetAllAsync(ur => ur.UserId == user.Id);
+        await RemoveUserFromRolesAsync(user.Id);
 
-        unitOfWork.UserRoleRepository.DeleteAll(roles);
+        await DetachUserFromMessagesAsync(user.Id);
 
         unitOfWork.UserRepository.Delete(user);
 
@@ -28,5 +28,30 @@ internal sealed class DeleteUserHandler(IUnitOfWork unitOfWork,
         return result
             ? Result<Unit>.Success(Unit.Value)
             : Result<Unit>.Failure("Failed to delete user.");
+    }
+
+    private async Task RemoveUserFromRolesAsync(Guid id)
+    {
+        var roles = await unitOfWork.UserRoleRepository.GetAllAsync(ur => ur.UserId == id);
+
+        unitOfWork.UserRoleRepository.DeleteAll(roles);
+    }
+
+    private async Task DetachUserFromMessagesAsync(Guid id)
+    {
+        // In-memory database is used by default to make testing easier.
+        // If you switch to SQL Server, you can use the method below and comment out the rest of the code.
+
+        // await unitOfWork.MessageRepository.NullifyUserIdsInMessagesAsync(id);
+
+        var messages = await unitOfWork.MessageRepository
+            .GetAllAsync(m => m.SenderId == id || m.RecipientId == id);
+
+        foreach (var message in messages)
+        {
+            message.SenderId = message.SenderId == id ? null : message.SenderId;
+
+            message.RecipientId = message.RecipientId == id ? null : message.RecipientId;
+        }
     }
 }
