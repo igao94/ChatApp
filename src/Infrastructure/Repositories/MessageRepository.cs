@@ -24,11 +24,10 @@ internal sealed class MessageRepository(AppDbContext context)
 
     public async Task<IReadOnlyList<Message>> GetChatAsync(Guid currentUserId, Guid recipientId)
     {
-        //In production, I could use ExecuteUpdateAsync to mark the message as read directly in the database.
-        //It's commented out because ExecuteUpdateAsync does not work with the in-memory database,
-        //used for testing.
+        // In production, I could use ExecuteUpdateAsync to mark the message as read directly in the database.
+        // It's commented out because ExecuteUpdateAsync does not work with the in-memory database, used for testing.
 
-        //await _context.Messages
+        // await _context.Messages
         //    .Where(m => m.RecipientId == currentUserId
         //        && m.SenderId == recipientId
         //        && m.DateRead == null)
@@ -38,8 +37,8 @@ internal sealed class MessageRepository(AppDbContext context)
             .AsNoTracking()
             .Include(m => m.Sender)
             .Include(m => m.Recipient)
-            .Where(m => (m.RecipientId == currentUserId && m.SenderId == recipientId)
-                || (m.SenderId == currentUserId && m.RecipientId == recipientId))
+            .Where(m => (m.RecipientId == currentUserId && m.SenderId == recipientId && !m.RecipientDeleted)
+                || (m.SenderId == currentUserId && m.RecipientId == recipientId && !m.SenderDeleted))
             .OrderBy(m => m.CreatedAt)
             .ToListAsync();
     }
@@ -55,11 +54,22 @@ internal sealed class MessageRepository(AppDbContext context)
 
         query = container switch
         {
-            "Inbox" => query.Where(m => m.RecipientId == userId),
-            "Outbox" => query.Where(m => m.SenderId == userId),
-            _ => query.Where(m => m.RecipientId == userId)
+            "Inbox" => query.Where(m => m.RecipientId == userId && !m.RecipientDeleted),
+            "Outbox" => query.Where(m => m.SenderId == userId && !m.SenderDeleted),
+            _ => query.Where(m => m.RecipientId == userId && !m.RecipientDeleted)
         };
 
         return await query.ToListAsync();
+    }
+
+    public async Task NullifyUserIdsInMessagesAsync(Guid userId)
+    {
+        await _context.Messages
+            .Where(m => m.SenderId == userId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(m => m.SenderId, (Guid?)null));
+
+        await _context.Messages
+            .Where(m => m.RecipientId == userId)
+            .ExecuteUpdateAsync(setters => setters.SetProperty(m => m.RecipientId, (Guid?)null));
     }
 }

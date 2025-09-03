@@ -1,4 +1,6 @@
-﻿using Application.Messages.Commands.MarkMessagesAsRead;
+﻿using Application.Messages.Commands.DeleteMessage;
+using Application.Messages.Commands.DeleteMessageForEveryone;
+using Application.Messages.Commands.MarkMessagesAsRead;
 using Application.Messages.Commands.SendMessage;
 using Application.Messages.DTOs;
 using Application.Messages.Queries.GetChatBetweenUsers;
@@ -31,5 +33,17 @@ public sealed class MessagesController : BaseApiController
         await Mediator.Send(new MarkMessagesAsReadCommand(recipientId));
 
         return HandleResult(await Mediator.Send(new GetChatBetweenUsersQuery(recipientId)));
+    }
+
+    [HttpDelete("{id}")]
+    public async Task<ActionResult> DeleteMessage(Guid id)
+    {
+        return HandleResult(await Mediator.Send(new DeleteMessageCommand(id)));
+    }
+
+    [HttpDelete("delete-message-for-everyone/{id}")]
+    public async Task<ActionResult> DeleteMessageForEveryone(Guid id)
+    {
+        return HandleResult(await Mediator.Send(new DeleteMessageForEveryoneCommand(id)));
     }
 }
