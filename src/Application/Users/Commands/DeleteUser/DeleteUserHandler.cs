@@ -26,9 +26,7 @@ internal sealed class DeleteUserHandler(IUnitOfWork unitOfWork,
 
         unitOfWork.UserRepository.Delete(user);
 
-        var hasChanges = await unitOfWork.SaveChangesAsync();
-
-        return hasChanges
+        return await unitOfWork.SaveChangesAsync()
             ? Result<Unit>.Success(Unit.Value)
             : Result<Unit>.Failure("Failed to delete user.");
     }
