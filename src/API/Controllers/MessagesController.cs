@@ -1,5 +1,6 @@
 ﻿using Application.Messages.Commands.DeleteMessage;
 using Application.Messages.Commands.DeleteMessageForEveryone;
+using Application.Messages.Commands.EditMessage;
 using Application.Messages.Commands.MarkMessagesAsRead;
 using Application.Messages.Commands.SendMessage;
 using Application.Messages.DTOs;
@@ -45,5 +46,11 @@ public sealed class MessagesController : BaseApiController
     public async Task<ActionResult> DeleteMessageForEveryone(Guid id)
     {
         return HandleResult(await Mediator.Send(new DeleteMessageForEveryoneCommand(id)));
+    }
+
+    [HttpPut]
+    public async Task<ActionResult> EditMessage(EditMessageCommand command)
+    {
+        return HandleResult(await Mediator.Send(command));
     }
 }
