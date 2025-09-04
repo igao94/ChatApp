@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Repositories;
+using Application.Helpers;
 using Application.Messages.DTOs;
 using AutoMapper;
 using MediatR;
@@ -14,12 +15,14 @@ internal sealed class GetMessagesHandler(IUnitOfWork unitOfWork,
     public async Task<Result<IReadOnlyList<MessageDto>>> Handle(GetMessagesQuery request,
         CancellationToken cancellationToken)
     {
-        var user = await unitOfWork.UserRepository.GetByIdAsync(userContext.UserId);
+        var result = await unitOfWork.GetUserByIdAsync(userContext.UserId);
 
-        if (user is null)
+        if (result.IsFailure)
         {
-            return Result<IReadOnlyList<MessageDto>>.Failure("User not found.");
+            return Result<IReadOnlyList<MessageDto>>.Failure(result.Error!);
         }
+
+        var user = result.Value!;
 
         var messages = await unitOfWork.MessageRepository
             .GetMessagesForUserAsync(user.Id, request.Container);
