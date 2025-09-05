@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Repositories;
+using Application.Helpers;
 using MediatR;
 using Shared;
 
@@ -10,12 +11,14 @@ internal sealed class DeleteUserHandler(IUnitOfWork unitOfWork,
 {
     public async Task<Result<Unit>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        var user = await unitOfWork.UserRepository.GetByIdAsync(userContext.UserId);
+        var userResult = await unitOfWork.GetUserByIdAsync(userContext.UserId);
 
-        if (user is null)
+        if (userResult.IsFailure)
         {
-            return Result<Unit>.Failure("User not found.");
+            return Result<Unit>.Failure(userResult.Error!);
         }
+
+        var user = userResult.Value!;
 
         await RemoveUserFromRolesAsync(user.Id);
 
@@ -23,9 +26,7 @@ internal sealed class DeleteUserHandler(IUnitOfWork unitOfWork,
 
         unitOfWork.UserRepository.Delete(user);
 
-        var result = await unitOfWork.SaveChangesAsync();
-
-        return result
+        return await unitOfWork.SaveChangesAsync()
             ? Result<Unit>.Success(Unit.Value)
             : Result<Unit>.Failure("Failed to delete user.");
     }

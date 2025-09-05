@@ -1,6 +1,7 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Repositories;
 using Application.Accounts.DTOs;
+using Application.Helpers;
 using MediatR;
 using Shared;
 
@@ -12,12 +13,14 @@ internal sealed class GetCurrentUserInfoHandler(IUnitOfWork unitOfWork,
     public async Task<Result<CurrentUserDto>> Handle(GetCurrentUserInfoQuery request,
         CancellationToken cancellationToken)
     {
-        var user = await unitOfWork.UserRepository.GetByIdAsync(userContext.UserId);
+        var userResult = await unitOfWork.GetUserByIdAsync(userContext.UserId);
 
-        if (user is null)
+        if (userResult.IsFailure)
         {
-            return Result<CurrentUserDto>.Failure("Please log in.");
+            return Result<CurrentUserDto>.Failure(userResult.Error!);
         }
+
+        var user = userResult.Value!;
 
         return Result<CurrentUserDto>.Success(new CurrentUserDto
         {

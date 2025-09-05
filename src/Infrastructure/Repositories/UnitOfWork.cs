@@ -12,6 +12,7 @@ internal sealed class UnitOfWork(IUserRepository userRepository,
     public IUserRepository UserRepository => userRepository;
 
     public IRoleRepository RoleRepository => roleRepository;
+
     public IUserRoleRepository UserRoleRepository => userRoleRepository;
 
     public IMessageRepository MessageRepository => messageRepository;

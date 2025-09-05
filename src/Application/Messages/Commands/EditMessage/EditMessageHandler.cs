@@ -1,5 +1,6 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Repositories;
+using Application.Helpers;
 using MediatR;
 using Shared;
 
@@ -10,13 +11,14 @@ internal sealed class EditMessageHandler(IUnitOfWork unitOfWork,
 {
     public async Task<Result<Unit>> Handle(EditMessageCommand request, CancellationToken cancellationToken)
     {
-        var message = await unitOfWork.MessageRepository
-            .GetAsync(m => m.SenderId == userContext.UserId && m.Id == request.Id);
+        var messageResult = await unitOfWork.GetMessageBySenderAsync(request.Id, userContext.UserId);
 
-        if (message is null)
+        if (messageResult.IsFailure)
         {
-            return Result<Unit>.Failure("Message not found.");
+            return Result<Unit>.Failure(messageResult.Error!);
         }
+
+        var message = messageResult.Value!;
 
         var timeSinceCreated = DateTime.UtcNow - message.CreatedAt;
 
@@ -34,9 +36,7 @@ internal sealed class EditMessageHandler(IUnitOfWork unitOfWork,
 
         message.UpdatedAt = DateTime.UtcNow;
 
-        var result = await unitOfWork.SaveChangesAsync();
-
-        return result
+        return await unitOfWork.SaveChangesAsync()
             ? Result<Unit>.Success(Unit.Value)
             : Result<Unit>.Failure("Failed to edit message.");
     }

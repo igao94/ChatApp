@@ -1,4 +1,5 @@
 ﻿using Application.Abstractions.Repositories;
+using Application.Helpers;
 using Application.Users.DTOs;
 using AutoMapper;
 using MediatR;
@@ -11,13 +12,10 @@ internal sealed class GetUserByIdHandler(IUnitOfWork unitOfWork,
 {
     public async Task<Result<UserDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
-        var user = await unitOfWork.UserRepository.GetByIdAsync(request.Id);
+        var userResult = await unitOfWork.GetUserByIdAsync(request.Id);
 
-        if (user is null)
-        {
-            return Result<UserDto>.Failure("User not found.");
-        }
-
-        return Result<UserDto>.Success(mapper.Map<UserDto>(user));
+        return userResult.IsFailure
+            ? Result<UserDto>.Failure(userResult.Error!)
+            : Result<UserDto>.Success(mapper.Map<UserDto>(userResult.Value));
     }
 }

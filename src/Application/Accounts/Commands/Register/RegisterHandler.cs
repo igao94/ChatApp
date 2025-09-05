@@ -30,13 +30,9 @@ internal sealed class RegisterHandler(IUnitOfWork unitOfWork,
 
         unitOfWork.UserRepository.Add(user);
 
-        var role = await unitOfWork.RoleRepository.GetAsync(r => r.Name == "User");
+        await AddUserToRoleAsync(user.Id);
 
-        unitOfWork.UserRoleRepository.AddUserToRole(user.Id, role!.Id);
-
-        var result = await unitOfWork.SaveChangesAsync();
-
-        return result
+        return await unitOfWork.SaveChangesAsync()
             ? Result<AccountDto>.Success(new AccountDto
             {
                 Id = user.Id,
@@ -45,5 +41,12 @@ internal sealed class RegisterHandler(IUnitOfWork unitOfWork,
                 About = user.About
             })
             : Result<AccountDto>.Failure("Failed to create user.");
+    }
+
+    private async Task AddUserToRoleAsync(Guid userId)
+    {
+        var role = await unitOfWork.RoleRepository.GetAsync(r => r.Name == "User");
+
+        unitOfWork.UserRoleRepository.AddUserToRole(userId, role!.Id);
     }
 }
