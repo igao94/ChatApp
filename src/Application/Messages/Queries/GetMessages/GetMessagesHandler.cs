@@ -15,14 +15,14 @@ internal sealed class GetMessagesHandler(IUnitOfWork unitOfWork,
     public async Task<Result<IReadOnlyList<MessageDto>>> Handle(GetMessagesQuery request,
         CancellationToken cancellationToken)
     {
-        var result = await unitOfWork.GetUserByIdAsync(userContext.UserId);
+        var userResult = await unitOfWork.GetUserByIdAsync(userContext.UserId);
 
-        if (result.IsFailure)
+        if (userResult.IsFailure)
         {
-            return Result<IReadOnlyList<MessageDto>>.Failure(result.Error!);
+            return Result<IReadOnlyList<MessageDto>>.Failure(userResult.Error!);
         }
 
-        var user = result.Value!;
+        var user = userResult.Value!;
 
         var messages = await unitOfWork.MessageRepository
             .GetMessagesForUserAsync(user.Id, request.Container);

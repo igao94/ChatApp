@@ -11,14 +11,14 @@ internal sealed class DeleteUserHandler(IUnitOfWork unitOfWork,
 {
     public async Task<Result<Unit>> Handle(DeleteUserCommand request, CancellationToken cancellationToken)
     {
-        var result = await unitOfWork.GetUserByIdAsync(userContext.UserId);
+        var userResult = await unitOfWork.GetUserByIdAsync(userContext.UserId);
 
-        if (result.IsFailure)
+        if (userResult.IsFailure)
         {
-            return Result<Unit>.Failure(result.Error!);
+            return Result<Unit>.Failure(userResult.Error!);
         }
 
-        var user = result.Value!;
+        var user = userResult.Value!;
 
         await RemoveUserFromRolesAsync(user.Id);
 

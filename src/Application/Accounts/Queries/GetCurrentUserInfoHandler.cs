@@ -13,14 +13,14 @@ internal sealed class GetCurrentUserInfoHandler(IUnitOfWork unitOfWork,
     public async Task<Result<CurrentUserDto>> Handle(GetCurrentUserInfoQuery request,
         CancellationToken cancellationToken)
     {
-        var result = await unitOfWork.GetUserByIdAsync(userContext.UserId);
+        var userResult = await unitOfWork.GetUserByIdAsync(userContext.UserId);
 
-        if (result.IsFailure)
+        if (userResult.IsFailure)
         {
-            return Result<CurrentUserDto>.Failure(result.Error!);
+            return Result<CurrentUserDto>.Failure(userResult.Error!);
         }
 
-        var user = result.Value!;
+        var user = userResult.Value!;
 
         return Result<CurrentUserDto>.Success(new CurrentUserDto
         {

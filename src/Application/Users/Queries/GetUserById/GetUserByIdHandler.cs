@@ -12,10 +12,10 @@ internal sealed class GetUserByIdHandler(IUnitOfWork unitOfWork,
 {
     public async Task<Result<UserDto>> Handle(GetUserByIdQuery request, CancellationToken cancellationToken)
     {
-        var result = await unitOfWork.GetUserByIdAsync(request.Id);
+        var userResult = await unitOfWork.GetUserByIdAsync(request.Id);
 
-        return result.IsFailure
-            ? Result<UserDto>.Failure(result.Error!)
-            : Result<UserDto>.Success(mapper.Map<UserDto>(result.Value));
+        return userResult.IsFailure
+            ? Result<UserDto>.Failure(userResult.Error!)
+            : Result<UserDto>.Success(mapper.Map<UserDto>(userResult.Value));
     }
 }
