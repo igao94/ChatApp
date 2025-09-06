@@ -7,6 +7,7 @@ using Application.Messages.Commands.SendMessage;
 using Application.Messages.DTOs;
 using Application.Messages.Queries.GetChatBetweenUsers;
 using Application.Messages.Queries.GetMessages;
+using Application.Messages.Queries.SearchChat;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Pagination;
 
@@ -27,7 +28,7 @@ public sealed class MessagesController : BaseApiController
     }
 
     [HttpGet("get-chat")]
-    public async Task<ActionResult<CursorPagination<MessageDto, DateTime?>>> 
+    public async Task<ActionResult<CursorPagination<MessageDto, DateTime?>>>
         GetChat([FromQuery] ChatParams chatParams)
     {
         // I could use ExecuteUpdateAsync in production to mark the message as read directly in the database.
@@ -55,5 +56,12 @@ public sealed class MessagesController : BaseApiController
     public async Task<ActionResult> EditMessage(EditMessageCommand command)
     {
         return HandleResult(await Mediator.Send(command));
+    }
+
+    [HttpGet("search-chat/{recipientId}")]
+    public async Task<ActionResult<IReadOnlyList<MessageDto>>> SearchChat(Guid recipientId,
+        string? searchTerm)
+    {
+        return HandleResult(await Mediator.Send(new SearchChatQuery(recipientId, searchTerm)));
     }
 }
