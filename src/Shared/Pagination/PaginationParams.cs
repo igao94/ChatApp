@@ -6,7 +6,6 @@ public class PaginationParams<TCursor>
     public TCursor? Cursor { get; set; }
 
     private int _pageSize = 3;
-
     public int PageSize
     {
         get => _pageSize;

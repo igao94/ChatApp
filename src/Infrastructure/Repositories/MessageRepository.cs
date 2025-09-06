@@ -22,7 +22,10 @@ internal sealed class MessageRepository(AppDbContext context)
         }
     }
 
-    public async Task<IReadOnlyList<Message>> GetChatAsync(Guid currentUserId, Guid recipientId)
+    public async Task<(IReadOnlyList<Message>, DateTime?)> GetChatAsync(Guid currentUserId,
+        Guid recipientId,
+        DateTime? cursor,
+        int pageSize)
     {
         // In production, I could use ExecuteUpdateAsync to mark the message as read directly in the database.
         // It's commented out because ExecuteUpdateAsync does not work with the in-memory database, used for testing.
@@ -33,14 +36,34 @@ internal sealed class MessageRepository(AppDbContext context)
         //        && m.DateRead == null)
         //    .ExecuteUpdateAsync(setters => setters.SetProperty(m => m.DateRead, DateTime.UtcNow));
 
-        return await _context.Messages
+        var query = _context.Messages
             .AsNoTracking()
             .Include(m => m.Sender)
             .Include(m => m.Recipient)
             .Where(m => (m.RecipientId == currentUserId && m.SenderId == recipientId && !m.RecipientDeleted)
                 || (m.SenderId == currentUserId && m.RecipientId == recipientId && !m.SenderDeleted))
-            .OrderBy(m => m.CreatedAt)
+            .OrderByDescending(m => m.CreatedAt)
+            .AsQueryable();
+
+        if (cursor.HasValue)
+        {
+            query = query.Where(m => m.CreatedAt <= cursor);
+        }
+
+        var messages = await query
+            .Take(pageSize + 1)
             .ToListAsync();
+
+        DateTime? nextCursor = null;
+
+        if (messages.Count > pageSize)
+        {
+            nextCursor = messages.Last().CreatedAt;
+
+            messages.RemoveAt(messages.Count - 1);
+        }
+
+        return (messages, nextCursor);
     }
 
     public async Task<IReadOnlyList<Message>> GetMessagesForUserAsync(Guid userId, string container)
