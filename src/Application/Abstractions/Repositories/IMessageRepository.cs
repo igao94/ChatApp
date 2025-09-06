@@ -11,4 +11,5 @@ public interface IMessageRepository : IRepositoryBase<Message>
         int pageSize);
     Task MarkMessagesAsReadAsync(Guid currentUserId, Guid recipientId);
     Task NullifyUserIdsInMessagesAsync(Guid userId);
+    Task<IReadOnlyList<Message>> SearchChatAsync(Guid currentUserId, Guid recipientId, string? searchTerm);
 }

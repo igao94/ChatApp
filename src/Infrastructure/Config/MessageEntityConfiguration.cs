@@ -10,6 +10,8 @@ internal sealed class MessageEntityConfiguration : IEntityTypeConfiguration<Mess
     {
         builder.Property(m => m.Content).IsRequired();
 
+        builder.HasIndex(m => m.Content);
+
         builder.HasOne(m => m.Sender)
             .WithMany(u => u.MessagesSent)
             .HasForeignKey(m => m.SenderId)

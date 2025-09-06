@@ -36,14 +36,7 @@ internal sealed class MessageRepository(AppDbContext context)
         //        && m.DateRead == null)
         //    .ExecuteUpdateAsync(setters => setters.SetProperty(m => m.DateRead, DateTime.UtcNow));
 
-        var query = _context.Messages
-            .AsNoTracking()
-            .Include(m => m.Sender)
-            .Include(m => m.Recipient)
-            .Where(m => (m.RecipientId == currentUserId && m.SenderId == recipientId && !m.RecipientDeleted)
-                || (m.SenderId == currentUserId && m.RecipientId == recipientId && !m.SenderDeleted))
-            .OrderByDescending(m => m.CreatedAt)
-            .AsQueryable();
+        var query = BuildMessageQuery(currentUserId, recipientId);
 
         if (cursor.HasValue)
         {
@@ -94,5 +87,31 @@ internal sealed class MessageRepository(AppDbContext context)
         await _context.Messages
             .Where(m => m.RecipientId == userId)
             .ExecuteUpdateAsync(setters => setters.SetProperty(m => m.RecipientId, (Guid?)null));
+    }
+
+    public async Task<IReadOnlyList<Message>> SearchChatAsync(Guid currentUserId,
+        Guid recipientId,
+        string? searchTerm)
+    {
+        var query = BuildMessageQuery(currentUserId, recipientId);
+
+        if (!string.IsNullOrEmpty(searchTerm))
+        {
+            query = query.Where(m => m.Content.ToLower().Contains(searchTerm.ToLower()));
+        }
+
+        return await query.ToListAsync();
+    }
+
+    private IQueryable<Message> BuildMessageQuery(Guid currentUserId, Guid recipientId)
+    {
+        return _context.Messages
+            .AsNoTracking()
+            .Include(m => m.Sender)
+            .Include(m => m.Recipient)
+            .Where(m => (m.RecipientId == currentUserId && m.SenderId == recipientId && !m.RecipientDeleted)
+                || (m.SenderId == currentUserId && m.RecipientId == recipientId && !m.SenderDeleted))
+            .OrderByDescending(m => m.CreatedAt)
+            .AsQueryable();
     }
 }
