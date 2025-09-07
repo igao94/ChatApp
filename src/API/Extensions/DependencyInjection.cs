@@ -1,4 +1,5 @@
-﻿using API.Middleware;
+﻿using API.Filters;
+using API.Middleware;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc.Authorization;
 
@@ -13,6 +14,8 @@ public static class DependencyInjection
             var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
 
             opt.Filters.Add(new AuthorizeFilter(policy));
+
+            opt.Filters.Add(typeof(LastSeenUserFilter));
         });
 
         services.AddTransient<ExceptionMiddleware>();
