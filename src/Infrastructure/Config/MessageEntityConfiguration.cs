@@ -12,6 +12,8 @@ internal sealed class MessageEntityConfiguration : IEntityTypeConfiguration<Mess
 
         builder.HasIndex(m => m.Content);
 
+        builder.HasIndex(m => m.CreatedAt);
+
         builder.HasOne(m => m.Sender)
             .WithMany(u => u.MessagesSent)
             .HasForeignKey(m => m.SenderId)

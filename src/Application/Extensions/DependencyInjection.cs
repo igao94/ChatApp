@@ -1,7 +1,9 @@
-﻿using Application.Accounts.Commands.Login;
+﻿using Application.Abstractions;
+using Application.Accounts.Commands.Login;
 using Application.Accounts.Validators;
 using Application.Behaviors;
 using Application.Mappings;
+using Application.Services;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
 
@@ -23,6 +25,8 @@ public static class DependencyInjection
         services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
         services.AddValidatorsFromAssemblyContaining<LoginValidator>();
+
+        services.AddScoped<IUserActivityService, UserActivityService>();
 
         return services;
     }

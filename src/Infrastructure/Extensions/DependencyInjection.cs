@@ -22,6 +22,8 @@ public static class DependencyInjection
         {
             bool useInMemoryDatabase = config.GetValue<bool>("UseInMemoryDatabase");
 
+            //EnableSensitiveDataLogging for development to get detailed logs in Serilog for easier debugging.
+            //Should be disabled in production to avoid exposing sensitive data.
             if (useInMemoryDatabase)
             {
                 opt.UseInMemoryDatabase("InMemoryDatabase").EnableSensitiveDataLogging();
