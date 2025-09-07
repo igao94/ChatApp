@@ -27,8 +27,10 @@ internal sealed class MessageRepository(AppDbContext context)
         DateTime? cursor,
         int pageSize)
     {
-        // In production, I could use ExecuteUpdateAsync to mark the message as read directly in the database.
-        // It's commented out because ExecuteUpdateAsync does not work with the in-memory database, used for testing.
+        // In a production environment with SQL Server, I would use ExecuteUpdateAsync 
+        // to mark messages as read directly in the database. 
+        // However, since ExecuteUpdateAsync doesn't work with the in-memory database 
+        // used for testing, this approach is commented out and handled via a separate endpoint instead.
 
         // await _context.Messages
         //    .Where(m => m.RecipientId == currentUserId
