@@ -27,16 +27,21 @@ public sealed class MessagesController : BaseApiController
         return HandleResult(await Mediator.Send(new GetMessagesQuery(container)));
     }
 
+    [HttpPut("mark-messages-read/{recipientId}")]
+    public async Task<ActionResult> MarkMessagesAsRead(Guid recipientId)
+    {
+        // Although the application is developed with SQL Server, 
+        // the default setup uses an in-memory database so users can test it more easily. 
+        // That's why this endpoint handles marking messages as read. 
+        // In production, I would use ExecuteUpdateAsync directly when the user fetches the chat.
+
+        return HandleResult(await Mediator.Send(new MarkMessagesAsReadCommand(recipientId)));
+    }
+
     [HttpGet("get-chat")]
     public async Task<ActionResult<CursorPagination<MessageDto, DateTime?>>>
         GetChat([FromQuery] ChatParams chatParams)
     {
-        // I could use ExecuteUpdateAsync in production to mark the message as read directly in the database.
-        // Since it doesn't work with the in-memory database used for testing,
-        // I handle it via the command instead.
-
-        await Mediator.Send(new MarkMessagesAsReadCommand(chatParams.RecipientId));
-
         return HandleResult(await Mediator.Send(new GetChatBetweenUsersQuery(chatParams)));
     }
 
