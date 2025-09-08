@@ -34,6 +34,10 @@ app.UseSerilogRequestLogging();
 
 app.UseHttpsRedirection();
 
+app.UseAuthentication();
+
+app.UseMiddleware<IsUserActiveMiddleware>();
+
 app.UseAuthorization();
 
 app.MapControllers();

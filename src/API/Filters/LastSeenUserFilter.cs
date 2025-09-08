@@ -3,7 +3,7 @@ using Microsoft.AspNetCore.Mvc.Filters;
 
 namespace API.Filters;
 
-internal sealed class LastSeenUserFilter(IUserActivityService userActivityService) : IAsyncActionFilter
+internal sealed class LastSeenUserFilter(IUserLastSeenService userLastSeenService) : IAsyncActionFilter
 {
     public async Task OnActionExecutionAsync(ActionExecutingContext context, ActionExecutionDelegate next)
     {
@@ -11,7 +11,7 @@ internal sealed class LastSeenUserFilter(IUserActivityService userActivityServic
 
         if (resultContext.HttpContext.User.Identity?.IsAuthenticated == true)
         {
-            await userActivityService.UpdateLastSeenAsync();
+            await userLastSeenService.UpdateLastSeenAsync();
         }
     }
 }

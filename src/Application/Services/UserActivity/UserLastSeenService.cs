@@ -2,10 +2,10 @@
 using Application.Abstractions.Authentication;
 using Application.Abstractions.Repositories;
 
-namespace Application.Services;
+namespace Application.Services.UserActivity;
 
-internal sealed class UserActivityService(IUnitOfWork unitOfWork,
-    IUserContext userContext) : IUserActivityService
+internal sealed class UserLastSeenService(IUnitOfWork unitOfWork,
+    IUserContext userContext) : IUserLastSeenService
 {
     public async Task UpdateLastSeenAsync()
     {
