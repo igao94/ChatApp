@@ -12,6 +12,8 @@ internal sealed class AppUserRoleEntityConfiguration : IEntityTypeConfiguration<
 
         builder.HasKey(k => new { k.UserId, k.RoleId });
 
+        builder.HasQueryFilter(ur => ur.User.IsActive);
+
         builder.HasOne(ur => ur.User)
             .WithMany(u => u.Roles)
             .HasForeignKey(ur => ur.UserId)

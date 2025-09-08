@@ -48,11 +48,11 @@ internal sealed class DeleteUserHandler(IUnitOfWork unitOfWork,
         var messages = await unitOfWork.MessageRepository
             .GetAllAsync(m => m.SenderId == id || m.RecipientId == id);
 
-        foreach (var message in messages)
-        {
-            message.SenderId = message.SenderId == id ? null : message.SenderId;
+        //foreach (var message in messages)
+        //{
+        //    message.SenderId = message.SenderId == id ? null : message.SenderId;
 
-            message.RecipientId = message.RecipientId == id ? null : message.RecipientId;
-        }
+        //    message.RecipientId = message.RecipientId == id ? null : message.RecipientId;
+        //}
     }
 }
