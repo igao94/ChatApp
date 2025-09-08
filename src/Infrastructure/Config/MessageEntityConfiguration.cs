@@ -12,7 +12,11 @@ internal sealed class MessageEntityConfiguration : IEntityTypeConfiguration<Mess
 
         builder.HasIndex(m => m.Content);
 
-        builder.HasIndex(m => m.CreatedAt);
+        builder.HasIndex(m => new { m.RecipientId, m.SenderId, m.RecipientDeleted, m.CreatedAt });
+
+        builder.HasIndex(m => new { m.SenderId, m.RecipientId, m.SenderDeleted, m.CreatedAt });
+
+        builder.HasQueryFilter(m => m.Sender.IsActive && m.Recipient.IsActive);
 
         builder.HasOne(m => m.Sender)
             .WithMany(u => u.MessagesSent)

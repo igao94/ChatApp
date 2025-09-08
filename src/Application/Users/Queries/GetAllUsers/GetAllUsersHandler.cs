@@ -7,13 +7,13 @@ using Shared;
 namespace Application.Users.Queries.GetAllUsers;
 
 internal sealed class GetAllUsersHandler(IUnitOfWork unitOfWork,
-    IMapper mapper) : IRequestHandler<GetAllUsersQuery, Result<IReadOnlyList<UserDto>>>
+    IMapper mapper) : IRequestHandler<GetAllUsersQuery, Result<IReadOnlyList<AdminUserDto>>>
 {
-    public async Task<Result<IReadOnlyList<UserDto>>> Handle(GetAllUsersQuery request,
+    public async Task<Result<IReadOnlyList<AdminUserDto>>> Handle(GetAllUsersQuery request,
         CancellationToken cancellationToken)
     {
-        var users = await unitOfWork.UserRepository.GetAllAsync();
+        var users = await unitOfWork.UserRepository.GetAllWithIgnoreQueryFilterAsync();
 
-        return Result<IReadOnlyList<UserDto>>.Success(mapper.Map<IReadOnlyList<UserDto>>(users));
+        return Result<IReadOnlyList<AdminUserDto>>.Success(mapper.Map<IReadOnlyList<AdminUserDto>>(users));
     }
 }

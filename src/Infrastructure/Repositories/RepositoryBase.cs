@@ -21,11 +21,9 @@ internal class RepositoryBase<T>(AppDbContext context) : IRepositoryBase<T> wher
 
     public void Delete(T entity) => _dbSet.Remove(entity);
 
-    public void DeleteAll(IEnumerable<T> entities) => _dbSet.RemoveRange(entities);
+    public async Task<IReadOnlyList<T>> GetAllAsync() => await _dbSet.ToListAsync();
 
-    public async Task<IEnumerable<T>> GetAllAsync() => await _dbSet.ToListAsync();
-
-    public async Task<IEnumerable<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
+    public async Task<IReadOnlyList<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
     {
         return await _dbSet.Where(predicate).ToListAsync();
     }
@@ -36,4 +34,14 @@ internal class RepositoryBase<T>(AppDbContext context) : IRepositoryBase<T> wher
     }
 
     public async Task<T?> GetByIdAsync(Guid id) => await _dbSet.FindAsync(id);
+
+    public async Task<T?> GetWithIgnoreQueryFilterAsync(Expression<Func<T, bool>> predicate)
+    {
+        return await _dbSet.IgnoreQueryFilters().Where(predicate).FirstOrDefaultAsync();
+    }
+
+    public async Task<IReadOnlyList<T>> GetAllWithIgnoreQueryFilterAsync()
+    {
+        return await _dbSet.IgnoreQueryFilters().ToListAsync();
+    }
 }

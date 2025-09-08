@@ -11,12 +11,14 @@ internal sealed class MappingProfile : Profile
     {
         CreateMap<AppUser, UserDto>();
 
+        CreateMap<AppUser, AdminUserDto>();
+
         CreateMap<Message, MessageDto>()
             .ForMember(dest => dest.SenderId, opt => opt.MapFrom(src => src.SenderId))
             .ForMember(dest => dest.SenderName,
-                opt => opt.MapFrom(src => src.Sender != null ? src.Sender.Name : "Deleted User"))
+                opt => opt.MapFrom(src => src.Sender.IsActive ? src.Sender.Name : "Deactivated User"))
             .ForMember(dest => dest.RecipientId, opt => opt.MapFrom(src => src.RecipientId))
             .ForMember(dest => dest.RecipientName,
-                opt => opt.MapFrom(src => src.Recipient != null ? src.Recipient.Name : "Deleted User"));
+                opt => opt.MapFrom(src => src.Recipient.IsActive ? src.Recipient.Name : "Deactivated User"));
     }
 }

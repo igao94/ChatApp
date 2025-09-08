@@ -18,7 +18,9 @@ public static class DependencyInjection
             opt.Filters.Add(typeof(LastSeenUserFilter));
         });
 
-        services.AddTransient<ExceptionMiddleware>();
+        services.AddScoped<ExceptionMiddleware>();
+
+        services.AddScoped<IsUserActiveMiddleware>();
 
         return services;
     }

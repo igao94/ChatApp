@@ -64,6 +64,7 @@ internal sealed class MessageRepository(AppDbContext context)
     public async Task<IReadOnlyList<Message>> GetMessagesForUserAsync(Guid userId, string container)
     {
         var query = _context.Messages
+            .IgnoreQueryFilters()
             .AsNoTracking()
             .Include(m => m.Recipient)
             .Include(m => m.Sender)
@@ -108,6 +109,7 @@ internal sealed class MessageRepository(AppDbContext context)
     private IQueryable<Message> BuildMessageQuery(Guid currentUserId, Guid recipientId)
     {
         return _context.Messages
+            .IgnoreQueryFilters()
             .AsNoTracking()
             .Include(m => m.Sender)
             .Include(m => m.Recipient)

@@ -15,5 +15,7 @@ internal sealed class AppUserEntityConfiguration : IEntityTypeConfiguration<AppU
         builder.Property(u => u.PasswordHash).IsRequired();
 
         builder.HasIndex(u => u.Email);
+
+        builder.HasQueryFilter(u => u.IsActive);
     }
 }

@@ -1,6 +1,6 @@
 ﻿namespace Application.Abstractions;
 
-public interface IUserActivityService
+public interface IUserLastSeenService
 {
     Task UpdateLastSeenAsync();
 }

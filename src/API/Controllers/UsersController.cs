@@ -1,4 +1,4 @@
-﻿using Application.Users.Commands.DeleteUser;
+﻿using Application.Users.Commands.DeactivateUser;
 using Application.Users.Commands.UpdateUser;
 using Application.Users.DTOs;
 using Application.Users.Queries.GetAllUsers;
@@ -29,9 +29,9 @@ public sealed class UsersController : BaseApiController
         return HandleResult(await Mediator.Send(command));
     }
 
-    [HttpDelete]
-    public async Task<ActionResult> DeleteUser()
+    [HttpPut("deactivate-user")]
+    public async Task<ActionResult> DeactivateUser()
     {
-        return HandleResult(await Mediator.Send(new DeleteUserCommand()));
+        return HandleResult(await Mediator.Send(new DeactivateUserCommand()));
     }
 }
