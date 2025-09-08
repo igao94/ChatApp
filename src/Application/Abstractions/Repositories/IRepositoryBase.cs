@@ -13,5 +13,5 @@ public interface IRepositoryBase<T> where T : BaseEntity
     void Add(T entity);
     void Delete(T entity);
     Task<T?> GetWithIgnoreQueryFilterAsync(Expression<Func<T, bool>> predicate);
-    Task<IReadOnlyList<T>> GetAllWithIgnoreQueryFilterAsync(Expression<Func<T, bool>> predicate);
+    Task<IReadOnlyList<T>> GetAllWithIgnoreQueryFilterAsync();
 }

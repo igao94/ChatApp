@@ -40,8 +40,8 @@ internal class RepositoryBase<T>(AppDbContext context) : IRepositoryBase<T> wher
         return await _dbSet.IgnoreQueryFilters().Where(predicate).FirstOrDefaultAsync();
     }
 
-    public async Task<IReadOnlyList<T>> GetAllWithIgnoreQueryFilterAsync(Expression<Func<T, bool>> predicate)
+    public async Task<IReadOnlyList<T>> GetAllWithIgnoreQueryFilterAsync()
     {
-        return await _dbSet.IgnoreQueryFilters().Where(predicate).ToListAsync();
+        return await _dbSet.IgnoreQueryFilters().ToListAsync();
     }
 }
