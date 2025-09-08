@@ -108,6 +108,7 @@ internal sealed class MessageRepository(AppDbContext context)
     private IQueryable<Message> BuildMessageQuery(Guid currentUserId, Guid recipientId)
     {
         return _context.Messages
+            .IgnoreQueryFilters()
             .AsNoTracking()
             .Include(m => m.Sender)
             .Include(m => m.Recipient)
