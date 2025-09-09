@@ -40,25 +40,7 @@ internal sealed class MessageRepository(AppDbContext context)
 
         var query = BuildMessageQuery(currentUserId, recipientId);
 
-        if (cursor.HasValue)
-        {
-            query = query.Where(m => m.CreatedAt <= cursor);
-        }
-
-        var messages = await query
-            .Take(pageSize + 1)
-            .ToListAsync();
-
-        DateTime? nextCursor = null;
-
-        if (messages.Count > pageSize)
-        {
-            nextCursor = messages.Last().CreatedAt;
-
-            messages.RemoveAt(messages.Count - 1);
-        }
-
-        return (messages, nextCursor);
+        return await PaginateByCursorDescAsync(query, pageSize, cursor);
     }
 
     public async Task<IReadOnlyList<Message>> GetMessagesForUserAsync(Guid userId, string container)

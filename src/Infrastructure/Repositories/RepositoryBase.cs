@@ -44,4 +44,33 @@ internal class RepositoryBase<T>(AppDbContext context) : IRepositoryBase<T> wher
     {
         return await _dbSet.IgnoreQueryFilters().ToListAsync();
     }
+
+    protected static async Task<(IReadOnlyList<T>, DateTime?)> PaginateByCursorDescAsync(IQueryable<T> query,
+        int pageSize,
+        DateTime? cursor)
+    {
+        // Executes cursor-based pagination on a descending query.
+        // IMPORTANT: The provided query must already be ordered by CreatedAt descending 
+        // for this method to return correct results.
+
+        if (cursor.HasValue)
+        {
+            query = query.Where(q => q.CreatedAt <= cursor.Value);
+        }
+
+        DateTime? nextCursor = null;
+
+        var items = await query
+            .Take(pageSize + 1)
+            .ToListAsync();
+
+        if (items.Count > pageSize)
+        {
+            nextCursor = items.Last().CreatedAt;
+
+            items.RemoveAt(items.Count - 1);
+        }
+
+        return (items, nextCursor);
+    }
 }
