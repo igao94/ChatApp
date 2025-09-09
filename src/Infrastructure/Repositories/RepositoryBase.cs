@@ -21,13 +21,6 @@ internal class RepositoryBase<T>(AppDbContext context) : IRepositoryBase<T> wher
 
     public void Delete(T entity) => _dbSet.Remove(entity);
 
-    public async Task<IReadOnlyList<T>> GetAllAsync() => await _dbSet.ToListAsync();
-
-    public async Task<IReadOnlyList<T>> GetAllAsync(Expression<Func<T, bool>> predicate)
-    {
-        return await _dbSet.Where(predicate).ToListAsync();
-    }
-
     public async Task<T?> GetAsync(Expression<Func<T, bool>> predicate)
     {
         return await _dbSet.Where(predicate).FirstOrDefaultAsync();
@@ -38,11 +31,6 @@ internal class RepositoryBase<T>(AppDbContext context) : IRepositoryBase<T> wher
     public async Task<T?> GetWithIgnoreQueryFilterAsync(Expression<Func<T, bool>> predicate)
     {
         return await _dbSet.IgnoreQueryFilters().Where(predicate).FirstOrDefaultAsync();
-    }
-
-    public async Task<IReadOnlyList<T>> GetAllWithIgnoreQueryFilterAsync()
-    {
-        return await _dbSet.IgnoreQueryFilters().ToListAsync();
     }
 
     protected static async Task<(IReadOnlyList<T>, DateTime?)> PaginateByCursorDescAsync(IQueryable<T> query,

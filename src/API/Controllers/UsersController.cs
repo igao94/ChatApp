@@ -4,6 +4,7 @@ using Application.Users.Commands.UpdateUser;
 using Application.Users.DTOs;
 using Application.Users.Queries.GetAllUsersForAdmin;
 using Application.Users.Queries.GetUserById;
+using Application.Users.Queries.SearchUsers;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Shared.Pagination;
@@ -36,5 +37,12 @@ public sealed class UsersController : BaseApiController
     public async Task<ActionResult> DeactivateUser()
     {
         return HandleResult(await Mediator.Send(new DeactivateUserCommand()));
+    }
+
+    [HttpGet("search-users")]
+    public async Task<ActionResult<CursorPagination<UserDto, DateTime?>>> SearchUsers(
+        [FromQuery] UserParams userParams)
+    {
+        return HandleResult(await Mediator.Send(new SearchUsersQuery(userParams)));
     }
 }

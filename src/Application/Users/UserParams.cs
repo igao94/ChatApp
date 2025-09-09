@@ -6,10 +6,20 @@ public sealed class UserParams : PaginationParams<DateTime?>
 {
     private string? _searchTerm;
 
-    public string SearchTerm
+    public string? SearchTerm
     {
-        get => _searchTerm ?? string.Empty;
+        get => _searchTerm;
 
-        set => _searchTerm = value.ToLower();
+        set
+        {
+            if (value is null)
+            {
+                _searchTerm = null;
+            }
+            else
+            {
+                _searchTerm = value.ToLower();
+            }
+        }
     }
 }

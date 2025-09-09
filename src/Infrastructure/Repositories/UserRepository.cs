@@ -26,4 +26,17 @@ internal sealed class UserRepository(AppDbContext context)
 
         return await PaginateByCursorDescAsync(query, pageSize, cursor);
     }
+
+    public async Task<(IReadOnlyList<AppUser>, DateTime?)> SearchUsersAsync(string searchTerm,
+        int pageSize,
+        DateTime? cursor)
+    {
+        var query = _context.Users
+            .AsNoTracking()
+            .Where(u => u.Name.Contains(searchTerm))
+            .OrderByDescending(u => u.CreatedAt)
+            .AsQueryable();
+
+        return await PaginateByCursorDescAsync(query, pageSize, cursor);
+    }
 }
