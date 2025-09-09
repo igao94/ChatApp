@@ -14,7 +14,7 @@ internal sealed class SearchUsersHandler(IUnitOfWork unitOfWork,
         CancellationToken cancellationToken)
     {
         var (users, nextCursor) = await unitOfWork.UserRepository
-            .SearchUsersAsync(request.UserParams.SearchTerm,
+            .SearchUsersAsync(request.UserParams.SearchTerm!,
                 request.UserParams.PageSize,
                 request.UserParams.Cursor);
 

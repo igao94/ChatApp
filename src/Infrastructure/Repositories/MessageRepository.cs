@@ -40,6 +40,8 @@ internal sealed class MessageRepository(AppDbContext context)
 
         var query = BuildMessageQuery(currentUserId, recipientId);
 
+        query = query.OrderByDescending(m => m.CreatedAt);
+
         return await PaginateByCursorDescAsync(query, pageSize, cursor);
     }
 
@@ -63,29 +65,17 @@ internal sealed class MessageRepository(AppDbContext context)
         return await query.ToListAsync();
     }
 
-    public async Task NullifyUserIdsInMessagesAsync(Guid userId)
-    {
-        await _context.Messages
-            .Where(m => m.SenderId == userId)
-            .ExecuteUpdateAsync(setters => setters.SetProperty(m => m.SenderId, (Guid?)null));
-
-        await _context.Messages
-            .Where(m => m.RecipientId == userId)
-            .ExecuteUpdateAsync(setters => setters.SetProperty(m => m.RecipientId, (Guid?)null));
-    }
-
-    public async Task<IReadOnlyList<Message>> SearchChatAsync(Guid currentUserId,
+    public async Task<(IReadOnlyList<Message>, DateTime?)> SearchChatAsync(Guid currentUserId,
         Guid recipientId,
-        string? searchTerm)
+        int pageSize,
+        DateTime? cursor,
+        string searchTerm)
     {
         var query = BuildMessageQuery(currentUserId, recipientId);
 
-        if (!string.IsNullOrEmpty(searchTerm))
-        {
-            query = query.Where(m => m.Content.Contains(searchTerm));
-        }
+        query = query.Where(m => m.Content.Contains(searchTerm)).OrderByDescending(m => m.CreatedAt);
 
-        return await query.ToListAsync();
+        return await PaginateByCursorDescAsync(query, pageSize, cursor);
     }
 
     private IQueryable<Message> BuildMessageQuery(Guid currentUserId, Guid recipientId)
@@ -97,7 +87,6 @@ internal sealed class MessageRepository(AppDbContext context)
             .Include(m => m.Recipient)
             .Where(m => (m.RecipientId == currentUserId && m.SenderId == recipientId && !m.RecipientDeleted)
                 || (m.SenderId == currentUserId && m.RecipientId == recipientId && !m.SenderDeleted))
-            .OrderByDescending(m => m.CreatedAt)
             .AsQueryable();
     }
 }

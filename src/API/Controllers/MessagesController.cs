@@ -63,10 +63,10 @@ public sealed class MessagesController : BaseApiController
         return HandleResult(await Mediator.Send(command));
     }
 
-    [HttpGet("search-chat/{recipientId}")]
-    public async Task<ActionResult<IReadOnlyList<MessageDto>>> SearchChat(Guid recipientId,
-        string? searchTerm)
+    [HttpGet("search-chat")]
+    public async Task<ActionResult<CursorPagination<MessageDto, DateTime?>>> SearchChat(
+        [FromQuery] SearchChatParams messageParams)
     {
-        return HandleResult(await Mediator.Send(new SearchChatQuery(recipientId, searchTerm)));
+        return HandleResult(await Mediator.Send(new SearchChatQuery(messageParams)));
     }
 }
