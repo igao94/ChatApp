@@ -16,7 +16,7 @@ internal sealed class GetChatBetweenUsersHandler(IUnitOfWork unitOfWork,
     public async Task<Result<CursorPagination<MessageDto, DateTime?>>> Handle(GetChatBetweenUsersQuery request,
         CancellationToken cancellationToken)
     {
-        var (messages, cursor) = await unitOfWork.MessageRepository.GetChatAsync(userContext.UserId,
+        var (messages, nextCursor) = await unitOfWork.MessageRepository.GetChatAsync(userContext.UserId,
             request.ChatParams.RecipientId,
             request.ChatParams.Cursor,
             request.ChatParams.PageSize);
@@ -25,7 +25,7 @@ internal sealed class GetChatBetweenUsersHandler(IUnitOfWork unitOfWork,
             .Success(new CursorPagination<MessageDto, DateTime?>
             {
                 Items = mapper.Map<IReadOnlyList<MessageDto>>(messages),
-                Cursor = cursor
+                NextCursor = nextCursor
             });
     }
 }

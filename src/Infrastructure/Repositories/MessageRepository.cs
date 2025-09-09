@@ -40,35 +40,21 @@ internal sealed class MessageRepository(AppDbContext context)
 
         var query = BuildMessageQuery(currentUserId, recipientId);
 
-        if (cursor.HasValue)
-        {
-            query = query.Where(m => m.CreatedAt <= cursor);
-        }
+        query = query.OrderByDescending(m => m.CreatedAt);
 
-        var messages = await query
-            .Take(pageSize + 1)
-            .ToListAsync();
-
-        DateTime? nextCursor = null;
-
-        if (messages.Count > pageSize)
-        {
-            nextCursor = messages.Last().CreatedAt;
-
-            messages.RemoveAt(messages.Count - 1);
-        }
-
-        return (messages, nextCursor);
+        return await PaginateByCursorDescAsync(query, pageSize, cursor);
     }
 
-    public async Task<IReadOnlyList<Message>> GetMessagesForUserAsync(Guid userId, string container)
+    public async Task<(IReadOnlyList<Message>, DateTime?)> GetMessagesForUserAsync(Guid userId, 
+        string? container,
+        int pageSize,
+        DateTime? cursor)
     {
         var query = _context.Messages
             .IgnoreQueryFilters()
             .AsNoTracking()
             .Include(m => m.Recipient)
             .Include(m => m.Sender)
-            .OrderByDescending(m => m.CreatedAt)
             .AsQueryable();
 
         query = container switch
@@ -78,32 +64,22 @@ internal sealed class MessageRepository(AppDbContext context)
             _ => query.Where(m => m.RecipientId == userId && !m.RecipientDeleted)
         };
 
-        return await query.ToListAsync();
+        query = query.OrderByDescending(m => m.CreatedAt);
+
+        return await PaginateByCursorDescAsync(query, pageSize, cursor);
     }
 
-    public async Task NullifyUserIdsInMessagesAsync(Guid userId)
-    {
-        await _context.Messages
-            .Where(m => m.SenderId == userId)
-            .ExecuteUpdateAsync(setters => setters.SetProperty(m => m.SenderId, (Guid?)null));
-
-        await _context.Messages
-            .Where(m => m.RecipientId == userId)
-            .ExecuteUpdateAsync(setters => setters.SetProperty(m => m.RecipientId, (Guid?)null));
-    }
-
-    public async Task<IReadOnlyList<Message>> SearchChatAsync(Guid currentUserId,
+    public async Task<(IReadOnlyList<Message>, DateTime?)> SearchChatAsync(Guid currentUserId,
         Guid recipientId,
-        string? searchTerm)
+        int pageSize,
+        DateTime? cursor,
+        string searchTerm)
     {
         var query = BuildMessageQuery(currentUserId, recipientId);
 
-        if (!string.IsNullOrEmpty(searchTerm))
-        {
-            query = query.Where(m => m.Content.ToLower().Contains(searchTerm.ToLower()));
-        }
+        query = query.Where(m => m.Content.Contains(searchTerm)).OrderByDescending(m => m.CreatedAt);
 
-        return await query.ToListAsync();
+        return await PaginateByCursorDescAsync(query, pageSize, cursor);
     }
 
     private IQueryable<Message> BuildMessageQuery(Guid currentUserId, Guid recipientId)
@@ -115,7 +91,6 @@ internal sealed class MessageRepository(AppDbContext context)
             .Include(m => m.Recipient)
             .Where(m => (m.RecipientId == currentUserId && m.SenderId == recipientId && !m.RecipientDeleted)
                 || (m.SenderId == currentUserId && m.RecipientId == recipientId && !m.SenderDeleted))
-            .OrderByDescending(m => m.CreatedAt)
             .AsQueryable();
     }
 }

@@ -5,28 +5,37 @@ using Application.Messages.DTOs;
 using AutoMapper;
 using MediatR;
 using Shared;
+using Shared.Pagination;
 
 namespace Application.Messages.Queries.GetMessages;
 
 internal sealed class GetMessagesHandler(IUnitOfWork unitOfWork,
     IUserContext userContext,
-    IMapper mapper) : IRequestHandler<GetMessagesQuery, Result<IReadOnlyList<MessageDto>>>
+    IMapper mapper) : IRequestHandler<GetMessagesQuery, Result<CursorPagination<MessageDto, DateTime?>>>
 {
-    public async Task<Result<IReadOnlyList<MessageDto>>> Handle(GetMessagesQuery request,
+    public async Task<Result<CursorPagination<MessageDto, DateTime?>>> Handle(GetMessagesQuery request,
         CancellationToken cancellationToken)
     {
         var userResult = await unitOfWork.GetUserByIdAsync(userContext.UserId);
 
         if (userResult.IsFailure)
         {
-            return Result<IReadOnlyList<MessageDto>>.Failure(userResult.Error!);
+            return Result<CursorPagination<MessageDto, DateTime?>>.Failure(userResult.Error!);
         }
 
         var user = userResult.Value!;
 
-        var messages = await unitOfWork.MessageRepository
-            .GetMessagesForUserAsync(user.Id, request.Container);
+        var (messages, nextCursor) = await unitOfWork.MessageRepository
+            .GetMessagesForUserAsync(user.Id,
+                request.MessageParams.Container,
+                request.MessageParams.PageSize,
+                request.MessageParams.Cursor);
 
-        return Result<IReadOnlyList<MessageDto>>.Success(mapper.Map<IReadOnlyList<MessageDto>>(messages));
+        return Result<CursorPagination<MessageDto, DateTime?>>
+            .Success(new CursorPagination<MessageDto, DateTime?>
+            {
+                Items = mapper.Map<IReadOnlyList<MessageDto>>(messages),
+                NextCursor = nextCursor
+            });
     }
 }
