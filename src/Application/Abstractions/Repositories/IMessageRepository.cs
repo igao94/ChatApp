@@ -4,7 +4,10 @@ namespace Application.Abstractions.Repositories;
 
 public interface IMessageRepository : IRepositoryBase<Message>
 {
-    Task<IReadOnlyList<Message>> GetMessagesForUserAsync(Guid userId, string container);
+    Task<(IReadOnlyList<Message>, DateTime?)> GetMessagesForUserAsync(Guid userId,
+        string? container,
+        int pageSize,
+        DateTime? cursor);
 
     Task<(IReadOnlyList<Message>, DateTime?)> GetChatAsync(Guid currentUserId,
         Guid recipientId,

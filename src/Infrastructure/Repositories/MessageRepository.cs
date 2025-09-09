@@ -45,14 +45,16 @@ internal sealed class MessageRepository(AppDbContext context)
         return await PaginateByCursorDescAsync(query, pageSize, cursor);
     }
 
-    public async Task<IReadOnlyList<Message>> GetMessagesForUserAsync(Guid userId, string container)
+    public async Task<(IReadOnlyList<Message>, DateTime?)> GetMessagesForUserAsync(Guid userId, 
+        string? container,
+        int pageSize,
+        DateTime? cursor)
     {
         var query = _context.Messages
             .IgnoreQueryFilters()
             .AsNoTracking()
             .Include(m => m.Recipient)
             .Include(m => m.Sender)
-            .OrderByDescending(m => m.CreatedAt)
             .AsQueryable();
 
         query = container switch
@@ -62,7 +64,9 @@ internal sealed class MessageRepository(AppDbContext context)
             _ => query.Where(m => m.RecipientId == userId && !m.RecipientDeleted)
         };
 
-        return await query.ToListAsync();
+        query = query.OrderByDescending(m => m.CreatedAt);
+
+        return await PaginateByCursorDescAsync(query, pageSize, cursor);
     }
 
     public async Task<(IReadOnlyList<Message>, DateTime?)> SearchChatAsync(Guid currentUserId,

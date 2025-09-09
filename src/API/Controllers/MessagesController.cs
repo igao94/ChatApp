@@ -22,9 +22,10 @@ public sealed class MessagesController : BaseApiController
     }
 
     [HttpGet("get-messages")]
-    public async Task<ActionResult<IReadOnlyList<MessageDto>>> GetMessages(string container)
+    public async Task<ActionResult<CursorPagination<MessageDto, DateTime?>>> GetMessages(
+        [FromQuery] MessageParams messageParams)
     {
-        return HandleResult(await Mediator.Send(new GetMessagesQuery(container)));
+        return HandleResult(await Mediator.Send(new GetMessagesQuery(messageParams)));
     }
 
     [HttpPut("mark-messages-read/{recipientId}")]
