@@ -1,10 +1,12 @@
-﻿using Application.Users.Commands.DeactivateUser;
+﻿using Application.Users;
+using Application.Users.Commands.DeactivateUser;
 using Application.Users.Commands.UpdateUser;
 using Application.Users.DTOs;
-using Application.Users.Queries.GetAllUsers;
+using Application.Users.Queries.GetAllUsersForAdmin;
 using Application.Users.Queries.GetUserById;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Pagination;
 
 namespace API.Controllers;
 
@@ -12,9 +14,10 @@ public sealed class UsersController : BaseApiController
 {
     [Authorize(Policy = "RequireAdminRole")]
     [HttpGet]
-    public async Task<ActionResult<IReadOnlyList<UserDto>>> GetAllUsers()
+    public async Task<ActionResult<CursorPagination<AdminUserDto, DateTime?>>> GetAllUsersForAdmin(
+        [FromQuery] UserParams userParams)
     {
-        return HandleResult(await Mediator.Send(new GetAllUsersQuery()));
+        return HandleResult(await Mediator.Send(new GetAllUsersForAdminQuery(userParams)));
     }
 
     [HttpGet("{id}")]
