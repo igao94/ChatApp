@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Repositories;
+using Application.Extensions.Mappings;
 using Application.Messages.DTOs;
-using AutoMapper;
 using MediatR;
 using Shared;
 using Shared.Pagination;
@@ -9,8 +9,8 @@ using Shared.Pagination;
 namespace Application.Messages.Queries.SearchChat;
 
 internal sealed class SearchChatHandler(IUnitOfWork unitOfWork,
-    IUserContext userContext,
-    IMapper mapper) : IRequestHandler<SearchChatQuery, Result<CursorPagination<MessageDto, DateTime?>>>
+    IUserContext userContext) 
+    : IRequestHandler<SearchChatQuery, Result<CursorPagination<MessageDto, DateTime?>>>
 {
     public async Task<Result<CursorPagination<MessageDto, DateTime?>>> Handle(SearchChatQuery request,
         CancellationToken cancellationToken)
@@ -24,7 +24,7 @@ internal sealed class SearchChatHandler(IUnitOfWork unitOfWork,
         return Result<CursorPagination<MessageDto, DateTime?>>
             .Success(new CursorPagination<MessageDto, DateTime?>
             {
-                Items = mapper.Map<IReadOnlyList<MessageDto>>(messages),
+                Items = messages.Select(m => m.ToDto()).ToList(),
                 NextCursor = nextCursor
             });
     }

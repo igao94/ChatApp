@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Repositories;
+using Application.Extensions.Mappings;
 using Application.Messages.DTOs;
-using AutoMapper;
 using Domain.Entites;
 using MediatR;
 using Shared;
@@ -9,8 +9,7 @@ using Shared;
 namespace Application.Messages.Commands.SendMessage;
 
 internal sealed class SendMessageHandler(IUnitOfWork unitOfWork,
-    IUserContext userContext,
-    IMapper mapper) : IRequestHandler<SendMessageCommand, Result<MessageDto>>
+    IUserContext userContext) : IRequestHandler<SendMessageCommand, Result<MessageDto>>
 {
     public async Task<Result<MessageDto>> Handle(SendMessageCommand request,
         CancellationToken cancellationToken)
@@ -36,7 +35,7 @@ internal sealed class SendMessageHandler(IUnitOfWork unitOfWork,
         var result = await unitOfWork.SaveChangesAsync();
 
         return result
-            ? Result<MessageDto>.Success(mapper.Map<MessageDto>(message))
+            ? Result<MessageDto>.Success(message.ToDto())
             : Result<MessageDto>.Failure("Failed to send message.");
     }
 }
