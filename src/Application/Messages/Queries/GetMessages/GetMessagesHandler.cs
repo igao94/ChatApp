@@ -1,8 +1,8 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Repositories;
+using Application.Extensions.Mappings;
 using Application.Helpers;
 using Application.Messages.DTOs;
-using AutoMapper;
 using MediatR;
 using Shared;
 using Shared.Pagination;
@@ -10,8 +10,8 @@ using Shared.Pagination;
 namespace Application.Messages.Queries.GetMessages;
 
 internal sealed class GetMessagesHandler(IUnitOfWork unitOfWork,
-    IUserContext userContext,
-    IMapper mapper) : IRequestHandler<GetMessagesQuery, Result<CursorPagination<MessageDto, DateTime?>>>
+    IUserContext userContext) 
+    : IRequestHandler<GetMessagesQuery, Result<CursorPagination<MessageDto, DateTime?>>>
 {
     public async Task<Result<CursorPagination<MessageDto, DateTime?>>> Handle(GetMessagesQuery request,
         CancellationToken cancellationToken)
@@ -34,7 +34,7 @@ internal sealed class GetMessagesHandler(IUnitOfWork unitOfWork,
         return Result<CursorPagination<MessageDto, DateTime?>>
             .Success(new CursorPagination<MessageDto, DateTime?>
             {
-                Items = mapper.Map<IReadOnlyList<MessageDto>>(messages),
+                Items = messages.Select(m => m.ToDto()).ToList(),
                 NextCursor = nextCursor
             });
     }

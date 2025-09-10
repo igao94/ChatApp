@@ -5,7 +5,7 @@ using Application.Helpers;
 using MediatR;
 using Shared;
 
-namespace Application.Accounts.Queries;
+namespace Application.Accounts.Queries.GetCurrentUserInfo;
 
 internal sealed class GetCurrentUserInfoHandler(IUnitOfWork unitOfWork,
     IUserContext userContext) : IRequestHandler<GetCurrentUserInfoQuery, Result<CurrentUserDto>>

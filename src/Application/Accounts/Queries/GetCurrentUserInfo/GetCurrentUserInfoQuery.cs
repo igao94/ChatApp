@@ -2,6 +2,6 @@
 using MediatR;
 using Shared;
 
-namespace Application.Accounts.Queries;
+namespace Application.Accounts.Queries.GetCurrentUserInfo;
 
 public sealed record GetCurrentUserInfoQuery : IRequest<Result<CurrentUserDto>>;

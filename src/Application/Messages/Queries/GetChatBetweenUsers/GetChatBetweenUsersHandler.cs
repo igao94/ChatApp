@@ -1,7 +1,7 @@
 ﻿using Application.Abstractions.Authentication;
 using Application.Abstractions.Repositories;
+using Application.Extensions.Mappings;
 using Application.Messages.DTOs;
-using AutoMapper;
 using MediatR;
 using Shared;
 using Shared.Pagination;
@@ -9,8 +9,7 @@ using Shared.Pagination;
 namespace Application.Messages.Queries.GetChatBetweenUsers;
 
 internal sealed class GetChatBetweenUsersHandler(IUnitOfWork unitOfWork,
-    IUserContext userContext,
-    IMapper mapper)
+    IUserContext userContext)
     : IRequestHandler<GetChatBetweenUsersQuery, Result<CursorPagination<MessageDto, DateTime?>>>
 {
     public async Task<Result<CursorPagination<MessageDto, DateTime?>>> Handle(GetChatBetweenUsersQuery request,
@@ -24,7 +23,7 @@ internal sealed class GetChatBetweenUsersHandler(IUnitOfWork unitOfWork,
         return Result<CursorPagination<MessageDto, DateTime?>>
             .Success(new CursorPagination<MessageDto, DateTime?>
             {
-                Items = mapper.Map<IReadOnlyList<MessageDto>>(messages),
+                Items = messages.Select(m => m.ToDto()).ToList(),
                 NextCursor = nextCursor
             });
     }
