@@ -2,7 +2,6 @@
 using Application.Accounts.Commands.Login;
 using Application.Accounts.Validators;
 using Application.Behaviors;
-using Application.Mappings;
 using Application.Services.UserActivity;
 using FluentValidation;
 using Microsoft.Extensions.DependencyInjection;
@@ -21,8 +20,6 @@ public static class DependencyInjection
 
             cfg.AddOpenBehavior(typeof(LoggingBehavior<,>));
         });
-
-        services.AddAutoMapper(typeof(MappingProfile).Assembly);
 
         services.AddValidatorsFromAssemblyContaining<LoginValidator>();
 
