@@ -1,6 +1,6 @@
-# Mini ChatApp API
+# ChatApp
 
-Mini ChatApp is a RESTful Web API built with **ASP.NET Core 8.0**, following **Clean Architecture** principles. The API allows users to send messages to each other and includes modern chat features such as authentication, authorization, and admin tools.
+ChatApp is a RESTful Web API built with **ASP.NET Core 8.0**, following **Clean Architecture** principles. The API allows users to send messages to each other and includes modern chat features such as authentication, authorization, and admin tools.
 
 ---
 
