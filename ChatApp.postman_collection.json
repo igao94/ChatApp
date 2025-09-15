@@ -1,0 +1,1110 @@
+{
+	"info": {
+		"_postman_id": "b4d0d28d-e564-41ce-bde4-c21da5584aff",
+		"name": "ChatApp",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "31602318"
+	},
+	"item": [
+		{
+			"name": "Account",
+			"item": [
+				{
+					"name": "Login and save token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let token;\r",
+									"\r",
+									"try {\r",
+									"    token = pm.response.text();\r",
+									"\r",
+									"    pm.test(\"Token is not empty\", function () {\r",
+									"        pm.expect(token).to.not.be.empty;\r",
+									"    });\r",
+									"\r",
+									"    pm.collectionVariables.set('token', token);\r",
+									"\r",
+									"} catch (e) {\r",
+									"    console.warn(\"Unable to read token from response.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"peter@example.com\",\r\n    \"password\": \"Pa$$w0rd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/accounts/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Login as admin and save token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let token;\r",
+									"\r",
+									"try {\r",
+									"    token = pm.response.text();\r",
+									"\r",
+									"    pm.test(\"Token is not empty\", function () {\r",
+									"        pm.expect(token).to.not.be.empty;\r",
+									"    });\r",
+									"\r",
+									"    pm.collectionVariables.set('token', token);\r",
+									"\r",
+									"} catch (e) {\r",
+									"    console.warn(\"Unable to read token from response.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"admin@example.com\",\r\n    \"password\": \"Pa$$w0rd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/accounts/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Register",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"name\": \"Igor\",\r\n    \"email\": \"igor@example.com\",\r\n    \"password\": \"Pa$$w0rd\",\r\n    \"about\": \"I am using chat app.\" \r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/accounts/register",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								"register"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get current user info",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/accounts/get-current-user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								"get-current-user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Users",
+			"item": [
+				{
+					"name": "Get all users for admin",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/users?searchTerm=igor&pageSize=4",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "igor"
+								},
+								{
+									"key": "pageSize",
+									"value": "4"
+								},
+								{
+									"key": "cursor",
+									"value": "2025-09-09T10:38:03.7773968",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get user by id",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/users/D6E7A57C-5E2F-4F3E-8BC8-2F71F9B7B92F",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"D6E7A57C-5E2F-4F3E-8BC8-2F71F9B7B92F"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search users",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/users/search-users?searchTerm=igor&pageSize=3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"search-users"
+							],
+							"query": [
+								{
+									"key": "searchTerm",
+									"value": "igor"
+								},
+								{
+									"key": "pageSize",
+									"value": "3"
+								},
+								{
+									"key": "cursor",
+									"value": "2025-09-09T10:37:59.8901488",
+									"disabled": true
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Update user",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"about\": \"Updated about\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/users",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Deactivate user",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/users/deactivate-user",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"users",
+								"deactivate-user"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "Messages",
+			"item": [
+				{
+					"name": "Log in as Michael and save token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let michael_token;\r",
+									"\r",
+									"try {\r",
+									"    michael_token = pm.response.text();\r",
+									"\r",
+									"    pm.test(\"Token is not empty\", function () {\r",
+									"        pm.expect(michael_token).to.not.be.empty;\r",
+									"    });\r",
+									"\r",
+									"    pm.collectionVariables.set('michael_token', michael_token);\r",
+									"\r",
+									"} catch (e) {\r",
+									"    console.warn(\"Unable to read token from response.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"michael@example.com\",\r\n    \"password\": \"Pa$$w0rd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/accounts/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Log in as Peter and save token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"let peter_token;\r",
+									"\r",
+									"try {\r",
+									"    peter_token = pm.response.text();\r",
+									"\r",
+									"    pm.test(\"Token is not empty\", function () {\r",
+									"        pm.expect(peter_token).to.not.be.empty;\r",
+									"    });\r",
+									"\r",
+									"    pm.collectionVariables.set('peter_token', peter_token);\r",
+									"\r",
+									"} catch (e) {\r",
+									"    console.warn(\"Unable to read token from response.\");\r",
+									"}"
+								],
+								"type": "text/javascript",
+								"packages": {}
+							}
+						}
+					],
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"email\": \"peter@example.com\",\r\n    \"password\": \"Pa$$w0rd\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/accounts/login",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"accounts",
+								"login"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send message from Michael To Peter",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{michael_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"recipientId\": \"B914F4A3-4F35-41A1-B95A-95F37C8E7F1D\",\r\n    \"content\": \"Test message 1 from Michael to Peter\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/messages/send-message",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"send-message"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Send message from Peter to Michael",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "POST",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{peter_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"recipientId\": \"F03A5D70-4F28-4C69-9A0D-3CB2B7051B91\",\r\n    \"content\": \"Test message 2 from Peter to Michael\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/messages/send-message",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"send-message"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get messages for Michael",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{michael_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/messages/get-messages?pageSize=4&container=Inbox",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"get-messages"
+							],
+							"query": [
+								{
+									"key": "pageSize",
+									"value": "4"
+								},
+								{
+									"key": "cursor",
+									"value": "2025-09-09T12:02:39.6313839",
+									"disabled": true
+								},
+								{
+									"key": "container",
+									"value": "Inbox"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get messages for Peter",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{peter_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/messages/get-messages?pageSize=4&container=Inbox",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"get-messages"
+							],
+							"query": [
+								{
+									"key": "pageSize",
+									"value": "4"
+								},
+								{
+									"key": "cursor",
+									"value": "2025-09-09T12:02:12.9375525",
+									"disabled": true
+								},
+								{
+									"key": "container",
+									"value": "Inbox"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get chat between Michael and Peter",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer  {{michael_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/messages/get-chat?recipientId=B914F4A3-4F35-41A1-B95A-95F37C8E7F1D&pageSize=3",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"get-chat"
+							],
+							"query": [
+								{
+									"key": "recipientId",
+									"value": "B914F4A3-4F35-41A1-B95A-95F37C8E7F1D"
+								},
+								{
+									"key": "cursor",
+									"value": "2025-09-06T10:51:12.8160821",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "3"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark messages as read between Michael and Peter as Michael",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{michael_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/messages/mark-messages-read/B914F4A3-4F35-41A1-B95A-95F37C8E7F1D",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"mark-messages-read",
+								"B914F4A3-4F35-41A1-B95A-95F37C8E7F1D"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Get chat between Peter and Michael",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer  {{peter_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/messages/get-chat?recipientId=F03A5D70-4F28-4C69-9A0D-3CB2B7051B91&pageSize=5",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"get-chat"
+							],
+							"query": [
+								{
+									"key": "recipientId",
+									"value": "F03A5D70-4F28-4C69-9A0D-3CB2B7051B91"
+								},
+								{
+									"key": "cursor",
+									"value": "2025-09-06T10:51:45.5204496",
+									"disabled": true
+								},
+								{
+									"key": "pageSize",
+									"value": "5"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Mark messages as read between Michael and Peter for Peter",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{peter_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/messages/mark-messages-read/F03A5D70-4F28-4C69-9A0D-3CB2B7051B91",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"mark-messages-read",
+								"F03A5D70-4F28-4C69-9A0D-3CB2B7051B91"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete message as Michael",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{michael_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/messages/bfb0c159-57d6-44ba-8e62-62f50e2722ee",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"bfb0c159-57d6-44ba-8e62-62f50e2722ee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete message as Peter",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{peter_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/messages/bfb0c159-57d6-44ba-8e62-62f50e2722ee",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"bfb0c159-57d6-44ba-8e62-62f50e2722ee"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete message for everyone as Michael",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{michael_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/messages/delete-message-for-everyone/7391c79a-bf95-4dfa-b2e2-5001eecd57cd",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"delete-message-for-everyone",
+								"7391c79a-bf95-4dfa-b2e2-5001eecd57cd"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Delete message for everyone as Peter",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "DELETE",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{peter_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/messages/delete-message-for-everyone/c9fb4198-f726-4b6e-a508-b12fcb20c209",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"delete-message-for-everyone",
+								"c9fb4198-f726-4b6e-a508-b12fcb20c209"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit message as Michael",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{michael_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"9648444e-6976-4ac6-a84e-e849a563902a\",\r\n    \"content\": \"Test message 1 from Michael to Peter edited\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/messages",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Edit message as Peter",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "PUT",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{peter_token}}",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\r\n    \"id\": \"4570da71-f066-4204-bbd4-535fc1774d4b\",\r\n    \"content\": \"Test message 2 from Peter to Michael edited\"\r\n}",
+							"options": {
+								"raw": {
+									"language": "json"
+								}
+							}
+						},
+						"url": {
+							"raw": "{{url}}/api/messages",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search chat between Michael and Peter as Michael",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{michael_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/messages/search-chat?recipientId=B914F4A3-4F35-41A1-B95A-95F37C8E7F1D&pageSize=4&searchTerm=igor",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"search-chat"
+							],
+							"query": [
+								{
+									"key": "recipientId",
+									"value": "B914F4A3-4F35-41A1-B95A-95F37C8E7F1D"
+								},
+								{
+									"key": "pageSize",
+									"value": "4"
+								},
+								{
+									"key": "cursor",
+									"value": "2025-09-09T12:02:16.5741507",
+									"disabled": true
+								},
+								{
+									"key": "searchTerm",
+									"value": "igor"
+								}
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "Search chat between Michael and Peter as Peter",
+					"request": {
+						"auth": {
+							"type": "noauth"
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Authorization",
+								"value": "Bearer {{peter_token}}",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{url}}/api/messages/search-chat?recipientId=F03A5D70-4F28-4C69-9A0D-3CB2B7051B91&pageSize=4&searchTerm=igor",
+							"host": [
+								"{{url}}"
+							],
+							"path": [
+								"api",
+								"messages",
+								"search-chat"
+							],
+							"query": [
+								{
+									"key": "recipientId",
+									"value": "F03A5D70-4F28-4C69-9A0D-3CB2B7051B91"
+								},
+								{
+									"key": "pageSize",
+									"value": "4"
+								},
+								{
+									"key": "cursor",
+									"value": "2025-09-09T12:02:16.5741507",
+									"disabled": true
+								},
+								{
+									"key": "searchTerm",
+									"value": "igor"
+								}
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	],
+	"event": [
+		{
+			"listen": "prerequest",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		},
+		{
+			"listen": "test",
+			"script": {
+				"type": "text/javascript",
+				"packages": {},
+				"exec": [
+					""
+				]
+			}
+		}
+	],
+	"variable": [
+		{
+			"key": "url",
+			"value": "https://localhost:5001",
+			"type": "string"
+		},
+		{
+			"key": "token",
+			"value": ""
+		},
+		{
+			"key": "michael_token",
+			"value": ""
+		},
+		{
+			"key": "peter_token",
+			"value": ""
+		}
+	]
+}
