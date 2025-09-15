@@ -30,11 +30,17 @@ ChatApp is a RESTful Web API built with **ASP.NET Core 8.0**, following **Clean 
 - Deactivating and reactivating user profiles
 
 ### For Admins
-- Viewing all users, including deactivated ones   
+- Viewing all users, including deactivated ones  
+- Default admin credentials for testing:
+  - **Email:** admin@example.com  
+  - **Password:** Pa$$w0rd  
 
 ### Messages
 - Inbox and Outbox filtering  
-- Cursor pagination for efficient chat history retrieval  
+- Cursor pagination for efficient chat history retrieval
+
+### Tools
+- **Postman Collection** included for all API endpoints to easily test and interact with the API
 
 ---
 
