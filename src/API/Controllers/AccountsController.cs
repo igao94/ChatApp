@@ -16,7 +16,7 @@ public sealed class AccountsController : BaseApiController
         return HandleResult(await Mediator.Send(command));
     }
 
-    [HttpPost("Register")]
+    [HttpPost("register")]
     public async Task<ActionResult<AccountDto>> Register(RegisterCommand command)
     {
         return HandleResult(await Mediator.Send(command));

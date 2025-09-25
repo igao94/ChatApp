@@ -25,6 +25,7 @@ internal static class UserMappingExtensions
             Name = user.Name,
             Email = user.Email,
             LastSeen = user.LastSeen,
+            IsActive = user.IsActive,
             About = user.About
         };
     }
